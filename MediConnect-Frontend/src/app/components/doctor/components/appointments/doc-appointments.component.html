@@ -1,0 +1,296 @@
+<div class="appointment-container">
+  <div *ngIf="isLoading" class="appointment-loading">
+    <i class="fas fa-spinner fa-spin"></i> Loading appointments...
+  </div>
+
+  <ng-container *ngIf="!isLoading">
+    <div class="appointment-header">
+      <div class="appointment-header__left">
+        <h2 class="appointment-title">Manage Appointments</h2>
+        <div class="appointment-controls">
+          <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input 
+              type="text" 
+              class="search-input"
+              placeholder="Search by patient or reason..." 
+              [ngModel]="searchTerm" 
+              (ngModelChange)="onSearchTermChange($event)"
+            />
+          </div>
+          <select 
+            [ngModel]="statusFilter" 
+            (ngModelChange)="onStatusFilterChange($event)" 
+            class="status-select"
+          >
+            <option value="ALL">All Statuses</option>
+            <option value="Waiting">Waiting</option>
+            <option value="Booked">Booked</option>
+            <option value="Completed">Completed</option>
+            <option value="Cancelled">Cancelled</option>
+          </select>
+        </div>
+      </div>
+      <div class="appointment-header__right">
+        <span class="badge">{{ appointments.length }}</span>
+        <button class="refresh-icon" (click)="fetchAppointments()" title="Refresh Appointments">
+          <i class="fas fa-sync-alt"></i>
+        </button>
+      </div>
+    </div>
+    
+    <div class="table-wrapper">
+      <table class="appointments-table">
+        <thead>
+          <tr>
+            <th class="table-header">Patient</th>
+            <th class="table-header">Date</th>
+            <th class="table-header">Time</th>
+            <th class="table-header">Mode</th>
+            <th class="table-header">Status</th>
+            <th class="table-header">Reason</th>
+            <th class="table-header">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="paginatedAppointments.length === 0">
+            <td colspan="7" class="no-appointments">
+              No appointments found
+            </td>
+          </tr>
+          <tr *ngFor="let appointment of paginatedAppointments" class="table-row">
+            <td class="table-cell">
+              <div class="cell-content">
+                <i class="fas fa-user"></i>
+                {{ appointment.patientName }}
+              </div>
+            </td>
+            <td class="table-cell">
+              <div class="cell-content">
+                <i class="fas fa-calendar"></i>
+                {{ appointment.date | date:'mediumDate' }}
+              </div>
+            </td>
+            <td class="table-cell">
+              <div class="cell-content">
+                <i class="fas fa-clock"></i>
+                {{ appointment.timeSlot }}
+              </div>
+            </td>
+            <!-- <td class="table-cell">
+              <span [class]="'mode-badge mode-' + (appointment.consultationMode || 'in-person')">
+                <i [class]="(appointment.consultationMode || 'in-person') === 'virtual' ? 'fas fa-video' : 'fas fa-user-friends'"></i>
+                {{ (appointment.consultationMode || 'in-person') === 'virtual' ? 'Virtual' : 'In-Person' }}
+              </span>
+            </td> -->
+            <td class="table-cell">
+              <span [class]="'status-badge status-' + appointment.status.toLowerCase()">
+                {{ appointment.status }}
+              </span>
+            </td>
+            <td class="table-cell reason-cell" [title]="appointment.reason">
+              {{ appointment.reason }}
+            </td>
+            <td class="table-cell">
+              <div class="actions-container">
+                <ng-container *ngIf="appointment.status === 'Waiting'">
+                  <button 
+                    class="action-btn btn-accept" 
+                    title="Accept" 
+                    (click)="handleUpdateStatus(appointment, 'Booked')"
+                  >
+                    <i class="fas fa-check"></i>
+                  </button>
+                  <button 
+                    class="action-btn btn-decline" 
+                    title="Decline" 
+                    (click)="handleUpdateStatus(appointment, 'Cancelled')"
+                  >
+                    <i class="fas fa-times"></i>
+                  </button>
+                </ng-container>
+
+                <ng-container *ngIf="appointment.status === 'Booked'">
+                  <button 
+                    class="btn-complete" 
+                    title="Mark as Completed" 
+                    (click)="handleUpdateStatus(appointment, 'Completed')"
+                  >
+                    Complete
+                  </button>
+                  <!-- <button 
+                    class="btn-consult" 
+                    (click)="handleConsultation(appointment)"
+                  >
+                    Consult
+                  </button> -->
+                </ng-container>
+
+                <span *ngIf="appointment.status === 'Completed'" class="status-final">
+                  Consultation completed
+                </span>
+                
+                <span *ngIf="appointment.status === 'Cancelled'" class="status-final">
+                  Appointment cancelled
+                </span>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+        <div class="pagination-container" *ngIf="filteredAppointments.length > 0">
+      <div class="pagination-info">
+        Showing {{ (currentPage - 1) * rowsPerPage + 1 }} to {{ min(currentPage * rowsPerPage, filteredAppointments.length) }} of {{ filteredAppointments.length }} appointments
+      </div>
+      
+      <div class="pagination-controls">
+        <button
+          (click)="goToPrevious()"
+          [disabled]="currentPage === 1"
+          class="pagination-btn"
+          title="Previous Page"
+        >
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        
+        <button
+          *ngFor="let page of pageNumbers"
+          (click)="goToPage(page)"
+          class="pagination-number"
+          [class.active]="page === currentPage"
+        >
+          {{ page }}
+        </button>
+        
+        <button
+          (click)="goToNext()"
+          [disabled]="currentPage === totalPages"
+          class="pagination-btn"
+          title="Next Page"
+        >
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+  </ng-container>
+
+  <div *ngIf="isVideoCallModalOpen && currentAppointment" class="video-call-modal-overlay">
+    <div class="video-call-modal-content">
+      <div class="video-call-modal-header">
+        <h3>
+          <i class="fas fa-video"></i> Video Call
+        </h3>
+        <button class="close-button" (click)="closeVideoCallModal()" title="Close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="video-call-modal-body">
+        <div id="jitsi-container" class="jitsi-container"></div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="isPrescriptionModalOpen && currentAppointment" class="prescription-modal-overlay">
+    <div class="prescription-modal-content">
+      <div class="prescription-modal-header">
+        <h3>
+          <i class="fas fa-prescription-bottle-alt"></i> Write Prescription
+        </h3>
+        <button class="close-button" (click)="closePrescriptionModal()" title="Close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="prescription-modal-body">
+        <div class="appointment-info">
+          <p>
+            <strong>Patient:</strong> {{ currentAppointment.patientName }}<br>
+            <strong>Date:</strong> {{ currentAppointment.date | date:'mediumDate' }}<br>
+            <strong>Time:</strong> {{ currentAppointment.timeSlot }}
+          </p>
+        </div>
+
+        <div class="medicines-section">
+          <div class="section-header">
+            <h4>Medicines</h4>
+            <button type="button" class="add-medicine-btn" (click)="addMedicine()">
+              <i class="fas fa-plus"></i> Add Medicine
+            </button>
+          </div>
+
+          <div class="medicines-list">
+            <div *ngFor="let medicine of prescriptionMedicines; let i = index" class="medicine-row">
+              <div class="medicine-input-group">
+                <input
+                  type="text"
+                  [(ngModel)]="medicine.name"
+                  placeholder="Medicine Name"
+                  class="medicine-input"
+                  required
+                />
+                <input
+                  type="text"
+                  [(ngModel)]="medicine.dosage"
+                  placeholder="Dosage (e.g., 500mg)"
+                  class="medicine-input"
+                  required
+                />
+                <input
+                  type="text"
+                  [(ngModel)]="medicine.frequency"
+                  placeholder="Frequency (e.g., Twice daily)"
+                  class="medicine-input"
+                  required
+                />
+                <button
+                  type="button"
+                  class="remove-medicine-btn"
+                  (click)="removeMedicine(i)"
+                  [disabled]="prescriptionMedicines.length === 1"
+                  title="Remove Medicine"
+                >
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="notes-section">
+          <label for="prescription-notes">Additional Notes</label>
+          <textarea
+            id="prescription-notes"
+            [(ngModel)]="prescriptionNotes"
+            placeholder="Enter any additional notes or instructions for the patient..."
+            rows="4"
+            class="prescription-notes-textarea"
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="prescription-modal-actions">
+        <button
+          class="modal-button secondary"
+          (click)="closePrescriptionModal()"
+          [disabled]="isSavingPrescription"
+        >
+          Cancel
+        </button>
+        <button
+          class="modal-button primary"
+          (click)="savePrescription()"
+          [disabled]="isSavingPrescription"
+        >
+          <span *ngIf="!isSavingPrescription">
+            <i class="fas fa-save"></i> Save Prescription & Complete
+          </span>
+          <span *ngIf="isSavingPrescription">
+            <i class="fas fa-spinner fa-spin"></i> Saving...
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

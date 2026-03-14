@@ -1,0 +1,203 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+
+/* Default Theme (Light Mode) */
+:root {
+    --hc-primary: #117c6f;
+    --hc-secondary: #eeeeee;
+    --hc-accent: #2fc482;
+
+    --hc-not-found: #2853c9;
+
+    --hc-success: #28a745;
+    --hc-completed-bg: #065f46;
+    --hc-success-light: #d4edda;
+
+    --hc-highlight: #20c997;
+    --hc-alert: #dc3545;
+
+    --hc-orange: #FF9B00;
+    --hc-blue: #4300FF;
+    --hc-red: #E52020;
+    --hc-red-bg: #f24e4e;
+    --hc-green: #0b7e5d;
+    --hc-green-light: #9cf2d8;
+
+    --hc-white: #ffffff;
+    --hc-white-transparent: #ffffffbb;
+    --hc-gray-light: #f8f9fa;
+    --hc-nav-bg: #f1f1f1;
+    --hc-border-color: #e5e7eb;
+
+    --hc-gray-dark: #393e46;
+    --hc-gray-background: #393e46e6;
+    --hc-black: #222831;
+    --hc-text-black: #181c14;
+    --hc-header-text: #1f2937;
+    --hc-text-dark-title: #040d12;
+
+    --hc-text-tiltle: #f7f9f2;
+    --hc-text-white: #fbfbfb;
+
+    --hc-gray-text: #4b5563;
+
+    --hc-text: var(--hc-gray-dark);
+    --hc-bg: var(--hc-white);
+
+    /* New Variables */
+    --hc-primary-dark: #0f665b;
+    --hc-light-gray: #e5e7eb;
+    --hc-dark-gray: #374151;
+    --hc-gray: #6b7280;
+    --font-heading: "Poppins", sans-serif;
+
+    --font-primary: "Open Sans", sans-serif;
+    --font-secondary: "Poppins", sans-serif;
+    --font-subtitle: "Roboto", sans-serif;
+}
+
+/* Dark Mode Overrides */
+.dark-mode {
+    --hc-primary: #20c997;
+    --hc-secondary: #2fc482;
+    --hc-accent: #117c6f;
+
+    --hc-success: #28a745;
+    --hc-success-light: #1e3d2f;
+
+    --hc-highlight: #289c8e;
+    --hc-alert: #ff6b6b;
+
+    --hc-white: #222831;
+    --hc-gray-light: #393e46;
+    --hc-gray-dark: #f8f9fa;
+    --hc-black: #ffffff;
+
+    --hc-text: var(--hc-gray-dark);
+    --hc-bg: var(--hc-white);
+
+    --font-primary: "Nunito", sans-serif;
+    --font-secondary: "Raleway", sans-serif;
+    --font-subtitle: "Roboto", sans-serif;
+}
+
+/* Global Styles */
+body {
+    font-family: var(--font-primary);
+    font-optical-sizing: auto;
+    color: var(--hc-text);
+    background-color: var(--hc-bg);
+}
+
+/* Font Style Classes */
+.font-primary {
+    font-family: var(--font-primary);
+}
+
+.font-secondary {
+    font-family: var(--font-secondary);
+}
+
+/* Text Colors */
+.text-primary {
+    color: var(--hc-primary);
+}
+
+.text-secondary {
+    color: var(--hc-secondary);
+}
+
+.text-light {
+    color: var(--hc-white);
+}
+
+.text-success {
+    color: var(--hc-success);
+}
+
+.text-alert {
+    color: var(--hc-alert);
+}
+
+/* Background Colors */
+.bg-primary {
+    background-color: var(--hc-primary);
+}
+
+.bg-accent {
+    background-color: var(--hc-accent);
+}
+
+.bg-secondary {
+    background-color: var(--hc-gray-light);
+}
+
+.bg-white {
+    background-color: var(--hc-white);
+}
+
+/* Button Styles */
+.btn-primary {
+    background-color: var(--hc-primary);
+    color: var(--hc-white);
+    border: 1px solid var(--hc-primary);
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.btn-secondary {
+    background-color: var(--hc-gray-light);
+    color: var(--hc-gray-dark);
+    border: 1px solid var(--hc-gray-dark);
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.btn-success {
+    background-color: var(--hc-success);
+    color: var(--hc-white);
+    border: 1px solid var(--hc-success);
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+ul,
+li {
+    list-style-type: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+.refresh-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 6px;
+    color: var(--hc-gray-text);
+    transition: all 0.2s ease;
+}
+
+.refresh-icon:hover {
+    background: var(--hc-gray-light);
+    color: var(--hc-primary);
+}

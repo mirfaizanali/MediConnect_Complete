@@ -1,0 +1,321 @@
+<div class="history-view-container">
+  <div *ngIf="loading" class="loading-state">
+    <div class="loading-spinner"></div>
+    <p>Loading patient history...</p>
+  </div>
+
+  <div *ngIf="!loading && !history" class="empty-state">
+    <i class="fas fa-user-slash"></i>
+    <h3>No history found</h3>
+    <p>No medical history available for this patient.</p>
+    <button class="back-button" (click)="goBack()" *ngIf="showBackButton">
+      <i class="fas fa-arrow-left"></i> Back to Patient List
+    </button>
+  </div>
+
+  <ng-container *ngIf="!loading && history">
+   <div class="history-header">
+      <button class="back-button" (click)="goBack()" *ngIf="showBackButton">
+        <i class="fas fa-arrow-left"></i> Back
+      </button>
+      <h1>Medical History: {{ history.patientProfile.name }}</h1>
+    </div>
+
+    <div class="patient-profile-card">
+      <div class="profile-header">
+        <div class="avatar">
+          <i class="fas fa-user"></i>
+        </div>
+        <div class="profile-info">
+          <h2>{{ history.patientProfile.name }}</h2>
+          <div class="profile-details">
+            <span class="detail-item">
+              <i class="fas fa-user-tag"></i>
+              {{ history.patientProfile.age }} years • {{ history.patientProfile.gender }}
+            </span>
+            <span class="detail-item">
+              <i class="fas fa-tint"></i>
+              Blood Group: {{ history.patientProfile.bloodGroup }}
+            </span>
+            <span class="detail-item">
+              <i class="fas fa-phone"></i>
+              {{ history.patientProfile.phoneNumber || 'N/A' }}
+            </span>
+            <span class="detail-item">
+              <i class="fas fa-envelope"></i>
+              {{ history.patientProfile.email || 'N/A' }}
+            </span>
+            <span class="detail-item">
+              <i class="fas fa-map-marker-alt"></i>
+              {{ history.patientProfile.address || 'N/A' }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-overview">
+      <div class="stat-card">
+        <div class="stat-value">{{ history.appointments.length }}</div>
+        <div class="stat-label">Total Appointments</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">{{ getCompletedCount() }}</div>
+        <div class="stat-label">Completed</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">{{ history.consultations.length }}</div>
+        <div class="stat-label">Consultations</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">{{ getUniqueVisits() }}</div>
+        <div class="stat-label">Total Visits</div>
+      </div>
+    </div>
+
+    
+    <div class="history-tabs">
+      <button 
+        class="tab-button" 
+        [class.active]="activeTab === 'timeline'"
+        (click)="setActiveTab('timeline')"
+      >
+        Timeline View
+      </button>
+      <button 
+        class="tab-button" 
+        [class.active]="activeTab === 'appointments'"
+        (click)="setActiveTab('appointments')"
+      >
+        Appointments ({{ history.appointments.length }})
+      </button>
+      <button 
+        class="tab-button" 
+        [class.active]="activeTab === 'consultations'"
+        (click)="setActiveTab('consultations')"
+      >
+        Consultations ({{ history.consultations.length }})
+      </button>
+      <button 
+        class="tab-button" 
+        [class.active]="activeTab === 'prescriptions'"
+        (click)="setActiveTab('prescriptions')"
+      >
+        Prescriptions ({{ (history.prescriptions || []).length }})
+      </button>
+    </div>
+
+    
+    <div class="history-content">
+      
+      <div *ngIf="activeTab === 'timeline'" class="timeline-view">
+        <h3 class='time-line__heading'>Medical Timeline</h3>
+        <div class="timeline">
+          <div *ngFor="let event of timelineEvents; let i = index" class="timeline-item">
+            <div class="timeline-marker">
+              <div class="timeline-icon">
+                <i [class]="event.type === 'appointment' ? 'fas fa-calendar-alt' : 'fas fa-stethoscope'"></i>
+              </div>
+              <div *ngIf="i !== timelineEvents.length - 1" class="timeline-line"></div>
+            </div>
+            
+            <div class="timeline-content">
+              <div class="timeline-header">
+                <span class="timeline-date">
+                  {{ event.date | date:'fullDate' }}
+                </span>
+                <span 
+                  class="event-type-badge"
+                  [style.background-color]="event.type === 'appointment' ? '#3b82f6' : '#10b981'"
+                >
+                  {{ event.type === 'appointment' ? 'Appointment' : 'Consultation' }}
+                </span>
+              </div>
+              
+              <div *ngIf="event.type === 'appointment'" class="appointment-event">
+                <div class="event-header">
+                  <h4>Appointment with {{ event.doctorName || 'Doctor' }}</h4>
+                  <span 
+                    class="status-badge"
+                    [style.background-color]="getStatusColor(event.status)"
+                  >
+                    {{ event.status }}
+                  </span>
+                </div>
+                <div class="event-details">
+                  <p><i class="fas fa-clock"></i> {{ event.timeSlot }}</p>
+                  <p><strong>Reason:</strong> {{ event.reason }}</p>
+                </div>
+              </div>
+              
+              <div *ngIf="event.type === 'consultation'" class="consultation-event">
+                <div class="event-header">
+                  <h4>Medical Consultation</h4>
+                  <span class="status-badge" style="background-color: #10b981">
+                    Completed
+                  </span>
+                </div>
+                <div class="consultation-details">
+                  <div class="vitals">
+                    <span>BP: {{ event.bloodPressure }}</span>
+                    <span>Height: {{ event.height }}cm</span>
+                    <span>Weight: {{ event.weight }}kg</span>
+                  </div>
+                  <p><strong>Symptoms:</strong> {{ event.symptoms }}</p>
+                  <p><strong>Diagnosis:</strong> {{ event.description }}</p>
+                  <p *ngIf="event.notes"><strong>Notes:</strong> {{ event.notes }}</p>
+                </div>
+              </div>
+              
+              <div *ngIf="event.type === 'prescription'" class="prescription-event">
+                <div class="event-header">
+                  <h4><i class="fas fa-prescription-bottle-alt"></i> Prescription</h4>
+                  <span class="status-badge" style="background-color: #8b5cf6">
+                    Prescribed
+                  </span>
+                </div>
+                <div class="prescription-details">
+                  <div class="medicines-list">
+                    <h5>Medicines:</h5>
+                    <div *ngFor="let medicine of event.medicines" class="medicine-item">
+                      <strong>{{ medicine.name }}</strong> - {{ medicine.dosage }} - {{ medicine.frequency }}
+                    </div>
+                  </div>
+                  <p *ngIf="event.notes"><strong>Notes:</strong> {{ event.notes }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div *ngIf="timelineEvents.length === 0" style="text-align: center; color: var(--hc-gray);">
+             No timeline events found.
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="activeTab === 'appointments'" class="appointments-view">
+        <h3>Appointment History</h3>
+        <div class="appointments-list">
+          <div *ngFor="let appointment of history.appointments" class="appointment-card">
+            <div class="appointment-header">
+              <div>
+                <h4>{{ appointment.doctorName }}</h4>
+                <p>{{ appointment.date | date }} • {{ appointment.timeSlot }}</p>
+              </div>
+              <span 
+                class="status-badge"
+                [style.background-color]="getStatusColor(appointment.status)"
+              >
+                {{ appointment.status }}
+              </span>
+            </div>
+            <p class="appointment-reason">{{ appointment.reason }}</p>
+          </div>
+          <div *ngIf="history.appointments.length === 0">No appointments found.</div>
+        </div>
+      </div>
+
+      <div *ngIf="activeTab === 'consultations'" class="consultations-view">
+        <h3>Consultation Records</h3>
+        <div class="consultations-list">
+          <div *ngFor="let consultation of history.consultations" class="consultation-card">
+            <div class="consultation-header">
+              <h4>Consultation on {{ consultation.date | date }}</h4>
+              <span class="status-badge" style="background-color: #10b981">
+                Completed
+              </span>
+            </div>
+            <div class="consultation-content">
+              <div class="vitals-section">
+                <h5>Vital Signs</h5>
+                <div class="vitals-grid">
+                  <span>Blood Pressure: {{ consultation.bloodPressure }}</span>
+                  <span>Height: {{ consultation.height }}cm</span>
+                  <span>Weight: {{ consultation.weight }}kg</span>
+                </div>
+              </div>
+              <div class="symptoms-section">
+                <h5>Symptoms</h5>
+                <p>{{ consultation.symptoms }}</p>
+              </div>
+              <div class="diagnosis-section">
+                <h5>Diagnosis</h5>
+                <p>{{ consultation.description }}</p>
+              </div>
+              <div *ngIf="consultation.notes" class="notes-section">
+                <h5>Doctor's Notes</h5>
+                <p>{{ consultation.notes }}</p>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="history.consultations.length === 0">No consultation records found.</div>
+        </div>
+      </div>
+
+<div *ngIf="activeTab === 'prescriptions'" class="prescriptions-view">
+  <h3>Prescription History</h3>
+  
+  <div class="prescriptions-list">
+    <div *ngFor="let prescription of (history.prescriptions || [])" class="prescription-card">
+      
+      <div class="prescription-header clickable" (click)="prescription.expanded = !prescription.expanded">
+        <div class="header-left">
+          <h4>
+            <i class="fas fa-prescription-bottle-alt"></i> 
+            Prescription #{{ prescription.prescriptionId }}
+          </h4>
+          <span class="date-badge">
+             <i class="far fa-calendar"></i> {{ prescription.date | date:'mediumDate' }}
+          </span>
+        </div>
+        
+        <div class="header-right">
+          <span class="status-badge" style="background-color: #8b5cf6">
+            Prescribed
+          </span>
+          <i class="fas fa-chevron-down toggle-icon" [class.rotated]="prescription.expanded"></i>
+        </div>
+      </div>
+
+      <div class="prescription-content" *ngIf="prescription.expanded">
+        
+        <div class="medicines-section">
+          <h5>Medicines:</h5>
+          <div class="table-responsive">
+            <table class="prescription-table">
+              <thead>
+                <tr>
+                  <th>Medicine Name</th>
+                  <th>Dosage</th>
+                  <th>Frequency</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr >
+                  <td><strong>{{ prescription.medicines }}</strong></td>
+                  <td>{{ prescription.dosage }}</td>
+                  <td>{{ prescription.frequency }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div *ngIf="prescription.notes" class="prescription-notes">
+          <h5>Doctor's Notes:</h5>
+          <p>{{ prescription.notes }}</p>
+        </div>
+
+      </div>
+    </div>
+
+    <div *ngIf="!history.prescriptions || history.prescriptions.length === 0" class="no-data">
+      <p>No prescriptions found.</p>
+    </div>
+  </div>
+
+  
+</div>
+    </div>
+  </ng-container>
+</div>

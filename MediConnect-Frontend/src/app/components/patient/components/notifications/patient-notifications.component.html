@@ -1,0 +1,52 @@
+<div class="notification-card-wrapper">
+  <div class="notification-card">
+    <div class="notification-card__header">
+      <div class="notification-card__title-section">
+        <i class="fas fa-bell"></i>
+        <h3 class="notification-card__title">Notifications</h3>
+        <span *ngIf="notifications.length > 0" class="notification-card__badge">{{ notifications.length }}</span>
+      </div>
+      <button
+        class="notification-card__mark-all"
+        (click)="handleMarkAllAsRead()"
+        [disabled]="notifications.length === 0"
+      >
+        Mark all as read
+      </button>
+    </div>
+    
+    <div class="notification-card__content">
+      <div *ngIf="loading" class="notification-card__loading">
+        <div class="loading-spinner"></div>
+        <p>Loading notifications...</p>
+      </div>
+
+      <div *ngIf="!loading && notifications.length === 0" class="notification-card__empty">
+        <i class="far fa-bell"></i>
+        <p>You're all caught up!</p>
+        <span>No new notifications</span>
+      </div>
+
+      <div *ngIf="!loading && notifications.length > 0" class="notification-card__list">
+        <div *ngFor="let notification of notifications" class="notification-card__item">
+          <div class="notification-card__item-icon">
+            <i class="far fa-envelope"></i>
+          </div>
+          <div class="notification-card__item-content">
+            <p class="notification-card__message">{{ notification.message }}</p>
+            <span class="notification-card__time">
+              {{ notification.createdAt | date:'shortTime' }}
+            </span>
+          </div>
+          <button
+            class="notification-card__action"
+            title="Mark as read"
+            (click)="handleMarkAsRead(notification.id)"
+          >
+            <i class="fas fa-check"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

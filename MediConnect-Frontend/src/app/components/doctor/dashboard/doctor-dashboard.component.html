@@ -1,0 +1,82 @@
+<div class="doctor-dashboard">
+  <aside class="dashboard-sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <i class="fas fa-heartbeat"></i>
+      </div>
+      <h1 class="sidebar-title">MediConnect</h1>
+    </div>
+    
+    <nav class="sidebar-nav">
+      <button 
+        class="nav-item" 
+        [class.active]="activeTab === 'appointments'"
+        (click)="setActiveTab('appointments')"
+      >
+        <i class="fas fa-calendar-check"></i>
+        <span>Appointments</span>
+      </button>
+
+      <button 
+        class="nav-item" 
+        [class.active]="activeTab === 'patients'"
+        (click)="setActiveTab('patients')"
+      >
+        <i class="fas fa-user-injured"></i>
+        <span>My Patients</span>
+      </button>
+
+      <button 
+        class="nav-item" 
+        [class.active]="activeTab === 'availability'"
+        (click)="setActiveTab('availability')"
+      >
+        <i class="fas fa-clock"></i>
+        <span>Availability</span>
+      </button>
+
+      <button 
+        class="nav-item" 
+        [class.active]="activeTab === 'profile'"
+        (click)="setActiveTab('profile')"
+      >
+        <i class="fas fa-user-md"></i>
+        <span>Profile</span>
+      </button>
+    </nav>
+    
+    <div class="sidebar-footer">
+      <button class="logout-btn" (click)="logout()">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Logout</span>
+      </button>
+    </div>
+  </aside>
+
+  <main class="dashboard-main">
+    <header class="dashboard-topbar">
+      <div class="topbar-title">
+        <h2>{{ getTabTitle() }}</h2>
+      </div>
+      
+      <div class="topbar-actions">
+        <!-- Notification Component -->
+        <app-doc-notification></app-doc-notification>
+        
+        <div class="user-profile">
+          <div class="user-avatar">
+            {{ getInitials() }}
+          </div>
+          <span class="user-name">{{ doctorName }}</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="dashboard-content">
+      <app-doc-appointments *ngIf="activeTab === 'appointments'"></app-doc-appointments>
+      <app-doctor-patient-panel *ngIf="activeTab === 'patients'"></app-doctor-patient-panel>
+      <app-doc-availability *ngIf="activeTab === 'availability'"></app-doc-availability>
+      <app-doctor-profile *ngIf="activeTab === 'profile'"></app-doctor-profile>
+    </div>
+  </main>
+</div>

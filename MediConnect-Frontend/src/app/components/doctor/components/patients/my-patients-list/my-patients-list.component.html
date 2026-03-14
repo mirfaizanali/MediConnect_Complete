@@ -1,0 +1,96 @@
+<div class="patient-list-container">
+  <div class="list-header">
+    <h2>My Patients</h2>
+    <div class="search-controls">
+      <div class="search-box">
+        <i class="fas fa-search search-icon"></i>
+        <input
+          type="text"
+          placeholder="Search by patient name..."
+          [ngModel]="searchTerm"
+          (ngModelChange)="onSearchTermChange($event)"
+        />
+      </div>
+      
+      <button 
+        class="filter-btn" 
+        [class.active]="showFilters"
+        (click)="toggleFilters()"
+      >
+        <i class="fas fa-filter"></i>
+        Filters
+        <span *ngIf="hasActiveFilters" class="filter-indicator"></span>
+      </button>
+
+      <button *ngIf="hasActiveFilters" class="clear-filters-btn" (click)="clearFilters()">
+        <i class="fas fa-times"></i>
+        Clear
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="showFilters" class="filter-panel">
+    <div class="filter-group">
+      <label>Email</label>
+      <input
+        type="text"
+        placeholder="Filter by email..."
+        [ngModel]="searchEmail"
+        (ngModelChange)="onSearchEmailChange($event)"
+      />
+    </div>
+  </div>
+
+  <div class="search-status">
+    <div *ngIf="searching" class="searching-indicator">Searching...</div>
+    <div *ngIf="hasActiveFilters && !searching" class="search-results-info">
+      Found {{ sortedPatients.length }} patients matching your search
+    </div>
+  </div>
+
+  <div class="table-container">
+    <div *ngIf="loading" style="text-align: center; padding: 2rem;">Loading...</div>
+    
+    <table *ngIf="!loading">
+      <thead>
+        <tr>
+          <th (click)="requestSort('name')">
+            Patient Name <i *ngIf="sortConfig?.key === 'name'" [class]="sortConfig?.direction === 'ascending' ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"></i>
+          </th>
+          <th (click)="requestSort('age')">
+            Age <i *ngIf="sortConfig?.key === 'age'" [class]="sortConfig?.direction === 'ascending' ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"></i>
+          </th>
+          <th (click)="requestSort('gender')">
+            Gender <i *ngIf="sortConfig?.key === 'gender'" [class]="sortConfig?.direction === 'ascending' ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"></i>
+          </th>
+          <th *ngIf="searchEmail">Email</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="sortedPatients.length === 0">
+          <td [colSpan]="searchEmail ? 5 : 4" class="no-data">
+            {{ hasActiveFilters ? 'No patients found matching your search criteria.' : 'No patients found.' }}
+          </td>
+        </tr>
+        <tr *ngFor="let patient of sortedPatients">
+          <td>
+            <i class="fas fa-user" style="margin-right: 0.5rem; color: var(--hc-gray);"></i> 
+            {{ patient.name }}
+          </td>
+          <td>{{ patient.age }}</td>
+          <td>{{ patient.gender }}</td>
+          <td *ngIf="searchEmail">{{ patient.email || 'N/A' }}</td>
+          <td>
+            <button
+              class="view-history-btn"
+              (click)="onSelect(patient.patientId)"
+            >
+              View History
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

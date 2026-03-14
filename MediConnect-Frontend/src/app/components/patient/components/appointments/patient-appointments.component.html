@@ -1,0 +1,213 @@
+<div class="appointments-card">
+  <div class="appointments-header">
+    <h3>
+      <i class="fas fa-calendar-alt"></i> My Appointments
+    </h3>
+    <div class="appointment-header__right">
+      <span class="badge">{{ appointments.length }}</span> 
+      <button class="refresh-icon" (click)="fetchAppointments()" title="Refresh Appointments">
+        <i class="fas fa-sync-alt"></i>
+      </button>
+    </div>
+  </div>
+  
+  <div class="appointments-content">
+    <div class="tabs">
+      <button 
+        class="tab" 
+        [class.active]="selectedTab === 'upcoming'"
+        (click)="setSelectedTab('upcoming')"
+      >
+        Upcoming
+      </button>
+      <button 
+        class="tab" 
+        [class.active]="selectedTab === 'past'"
+        (click)="setSelectedTab('past')"
+      >
+        History
+      </button>
+    </div>
+    
+    
+    <div class="pagination-controls top" *ngIf="appointments.length > 0">
+      <div class="pagination-info">
+        Showing {{ (currentPage - 1) * itemsPerPage + 1 }}-{{ min(currentPage * itemsPerPage, totalItems) }} of {{ totalItems }} appointments
+      </div>
+      <div class="pagination-options">
+        <select 
+          [(ngModel)]="itemsPerPage" 
+          (ngModelChange)="onItemsPerPageChange($event)"
+          class="items-per-page-select"
+        >
+          <option [ngValue]="5">5 per page</option>
+          <option [ngValue]="10">10 per page</option>
+          <option [ngValue]="20">20 per page</option>
+          <option [ngValue]="50">50 per page</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="table-container">
+      <div *ngIf="loading" class="empty-state">
+        <i class="fas fa-spinner fa-spin"></i> Loading appointments...
+      </div>
+      
+      <div *ngIf="!loading && error" class="empty-state error">{{ error }}</div>
+      
+      <div *ngIf="!loading && !error && appointments.length === 0" class="empty-state">
+        No {{ selectedTab }} appointments found.
+      </div>
+
+      <ng-container *ngIf="!loading && !error && appointments.length > 0">
+        <table>
+          <thead>
+            <tr>
+              <th>Doctor</th>
+              <th>Date </th>
+              <th>time </th>
+              <!-- <th>Consultation Mode</th> -->
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let app of paginatedAppointments" class="appointment-row">
+              <td data-label="Doctor">
+                <div class="cell-content">
+                  <span class="doctor-name">{{ app.doctorName }}</span>
+                </div>
+              </td>
+              <td data-label="Date & Time">
+                <div class="time-details">
+                  <span><i class="far fa-calendar"></i> {{ app.date | date:'mediumDate' }}</span>
+                </div>
+              </td>
+               <td data-label="Date & Time">
+                <div class="time-details">
+                  <span><i class="far fa-clock"></i> {{ app.timeSlot }}</span>
+                </div>
+              </td>
+              <!-- <td data-label="Consultation Mode">
+                <div class="consultation-mode">{{ app.consultationMode }}</div>
+              </td> -->
+              <td data-label="Status">
+                <div 
+                  class="status-badge"
+                  [style.color]="getStatusDetails(app.status).color"
+                  [style.background-color]="getStatusDetails(app.status).bgColor"
+                >
+                  <i *ngIf="app.status === 'Waiting'" class="far fa-clock"></i>
+                  <i *ngIf="app.status === 'Cancelled'" class="fas fa-times"></i>
+                  <span>{{ getStatusDetails(app.status).text }}</span>
+                </div>
+              </td>
+              <td data-label="Actions">
+                <div class="action-buttons" *ngIf="app.status === 'Waiting' || app.status === 'Booked'">
+                  <button 
+                    class="action-button edit-button" 
+                    (click)="openUpdateModal(app)"
+                    title="Edit reason"
+                  >
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button 
+                    class="action-button cancel-button" 
+                    (click)="handleCancel(app)"
+                    title="Cancel appointment"
+                  >
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+                <span *ngIf="app.status === 'Completed'" class="completed-text">Completed</span>
+                <span *ngIf="app.status === 'Cancelled'" class="cancelled-text">Cancelled</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <div class="pagination-controls bottom" *ngIf="totalPages > 1">
+          <div class="pagination-info">
+            Showing {{ (currentPage - 1) * itemsPerPage + 1 }}-{{ min(currentPage * itemsPerPage, totalItems) }} of {{ totalItems }} appointments
+          </div>
+          <div class="pagination-navigation">
+            <button
+              class="pagination-button"
+              (click)="goToPage(currentPage - 1)"
+              [disabled]="currentPage === 1"
+            >
+              <i class="fas fa-chevron-left"></i> Previous
+            </button>
+            
+            <div class="pagination-numbers">
+              <button
+                *ngFor="let page of pageNumbers"
+                class="pagination-number"
+                [class.active]="currentPage === page"
+                (click)="goToPage(page)"
+              >
+                {{ page }}
+              </button>
+            </div>
+            
+            <button
+              class="pagination-button"
+              (click)="goToPage(currentPage + 1)"
+              [disabled]="currentPage === totalPages"
+            >
+              Next <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+  
+  <div *ngIf="isModalOpen && editingAppointment" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Update Appointment Reason</h3>
+        <button class="close-button" (click)="closeUpdateModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="modal-body">
+        <p class="modal-info">
+          Appointment with <strong>{{ editingAppointment.doctorName }}</strong> on
+          {{ editingAppointment.date | date }} at {{ editingAppointment.timeSlot }}
+        </p>
+        
+        <div class="form-group">
+          <label for="reason">Reason for Visit *</label>
+          <textarea 
+            id="reason"
+            [(ngModel)]="newReason" 
+            placeholder="Please describe the reason for your visit..."
+            rows="4"
+            class="reason-textarea"
+          ></textarea>
+          <div class="char-count">
+            {{ newReason.length }}/5 characters minimum
+          </div>
+        </div>
+      </div>
+      
+      <div class="modal-actions">
+        <button 
+          class="modal-button secondary" 
+          (click)="closeUpdateModal()"
+        >
+          Cancel
+        </button>
+        <button 
+          class="modal-button primary" 
+          (click)="handleUpdateReason()"
+          [disabled]="newReason.trim().length < 5"
+        >
+          Update Reason
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

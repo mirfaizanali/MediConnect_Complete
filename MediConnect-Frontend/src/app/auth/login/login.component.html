@@ -1,0 +1,138 @@
+<div class="login-container">
+ 
+  <div class="login-background"></div>
+
+  
+  <!-- <div class="login-back-button" [class.scroll-log]="isScroll" (click)="navigate('/')">
+    <i class="fas fa-arrow-left"></i>
+    <span>Back to Home</span>
+  </div> -->
+
+
+  <div class="login-main">
+   
+    <div class="login-left">
+      <div class="login-left-content">
+        <div class="login-welcome">
+          <h1>Welcome to <span class="login__welcome-logo-name" (click)="navigate('/')">MediConnect</span></h1>
+          <p>Your trusted partner in healthcare journey. Access your medical records, connect with doctors, and manage your health seamlessly.</p>
+        </div>
+
+        <div class="login-stats">
+          <div class="login-stat">
+            <strong>12K+</strong>
+            <span>Patients</span>
+          </div>
+          <div class="login-stat">
+            <strong>100+</strong>
+            <span>Doctors</span>
+          </div>
+          <div class="login-stat">
+            <strong>99%</strong>
+            <span>Satisfaction</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="login-divider-line"></div>
+
+    
+    <div class="login-right">
+      <div class="login-form-container">
+        <div class="login-header">
+          <div class="login-icon">
+            <i class="fas fa-stethoscope"></i>
+          </div>
+          <h2>Sign In</h2>
+          <p>Access your MediConnect account</p>
+        </div>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+          <div class="login-input-group">
+            <label for="email" class="login-label">
+              <i class="fas fa-envelope login-input-icon"></i>
+              Email Address
+            </label>
+            <input
+              type="email"
+              id="email"
+              placeholder="Enter your email"
+              formControlName="email"
+              class="login-input"
+              [class.input-error]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+            />
+            <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="validation-error">
+              <span *ngIf="loginForm.get('email')?.errors?.['required']">Email is required</span>
+              <span *ngIf="loginForm.get('email')?.errors?.['email']">Please enter a valid email address</span>
+            </div>
+          </div>
+
+          <div class="login-input-group">
+            <label for="password" class="login-label">
+              <i class="fas fa-lock login-input-icon"></i>
+              Password
+            </label>
+            <div class="login-password-container">
+              <input
+                [type]="showPassword ? 'text' : 'password'"
+                id="password"
+                placeholder="Enter your password"
+                formControlName="password"
+                class="login-input"
+                [class.input-error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+              />
+              <button
+                type="button"
+                class="login-password-toggle"
+                (click)="togglePasswordVisibility()"
+              >
+                <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+              </button>
+            </div>
+            <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="validation-error">
+              <span *ngIf="loginForm.get('password')?.errors?.['required']">Password is required</span>
+            </div>
+          </div>
+
+          <div class="login-links">
+            <a class="login-link" style="cursor: pointer;">Forgot password?</a>
+          </div>
+
+          <div *ngIf="error" class="error-message" style="color: var(--hc-alert); font-size: 0.9rem; text-align: center;">
+            {{ error }}
+          </div>
+          <div *ngIf="successMessage" class="success-message" style="color: var(--hc-primary); font-size: 0.9rem; text-align: center;">
+            {{ successMessage }}
+          </div>
+
+          <button
+            type="submit"
+            class="login-submit-btn"
+            [disabled]="loginForm.invalid || isLoading"
+          >
+            <span *ngIf="isLoading" class="login-spinner"></span>
+            <span *ngIf="!isLoading">Sign In</span>
+            <span *ngIf="isLoading">Signing In...</span>
+          </button>
+        </form>
+
+        <div class="login-register-section">
+          <p class="login-register-text">Don't have an account?</p>
+          <div class="login-register-options">
+            <a routerLink="/register/patient" class="login-register-btn">
+              <i class="fas fa-user-plus"></i>
+              <span>Register as Patient</span>
+            </a>
+            
+            <a routerLink="/register/doctor" class="login-register-btn login-register-btn--doctor">
+              <i class="fas fa-user-md"></i>
+              <span>Register as Doctor</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

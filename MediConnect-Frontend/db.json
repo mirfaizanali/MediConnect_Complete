@@ -1,0 +1,274 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "email": "doctor@example.com",
+      "password": "pass@",
+      "name": "Dr. Sravyanth",
+      "role": "doctor",
+      "specialization": "Cardiology",
+      "experience": 10,
+      "profileImage": "assets/doctor1.jpg"
+    },
+    {
+      "id": "2",
+      "email": "patient@example.com",
+      "password": "pass@9876",
+      "name": "Laxman",
+      "role": "patient",
+      "age": 30,
+      "contact": "1234567890",
+      "profileImage": "assets/patient1.jpg"
+    }
+  ],
+  "patients": [
+    {
+      "id": "1",
+      "patientId": 1,
+      "userId": 2,
+      "name": "Laxman",
+      "age": 30,
+      "gender": "Male",
+      "bloodGroup": "O+",
+      "phoneNumber": "1234567891",
+      "email": "patient@example.com",
+      "address": "123 Main St",
+      "history": [
+        "Hypertension"
+      ]
+    }
+  ],
+  "doctors": [
+    {
+      "id": "1",
+      "userId": 1,
+      "name": "Dr. Sravyanth",
+      "email": "doctor@example.com",
+      "specialization": "Cardiology",
+      "qualification": "MBBS, MD",
+      "exp": 18,
+      "availableSlots": [
+        "10:00 AM",
+        "11:00 AM",
+        "2:00 PM"
+      ]
+    }
+  ],
+  "appointments": [
+    {
+      "id": "101",
+      "appointmentId": 101,
+      "doctorId": 1,
+      "doctorName": "Dr. Sravyanth",
+      "patientId": 1,
+      "patientName": "Laxman",
+      "date": "2023-10-25",
+      "timeSlot": "10:00 AM",
+      "status": "Completed",
+      "reason": "Routine Checkup"
+    },
+    {
+      "id": "102",
+      "appointmentId": 102,
+      "doctorId": 1,
+      "doctorName": "Dr. Sravyanth",
+      "patientId": 1,
+      "patientName": "Laxman",
+      "date": "2023-10-26",
+      "timeSlot": "11:00 AM",
+      "status": "Completed",
+      "reason": "Fever"
+    },
+    {
+      "id": "9d4f",
+      "doctorId": 1,
+      "patientId": 1,
+      "patientName": "Laxman",
+      "doctorName": "Dr. Sravyanth",
+      "date": "2025-12-09",
+      "timeSlot": "09:30",
+      "reason": "Rashes",
+      "status": "Completed"
+    },
+    {
+      "id": "aa8e",
+      "doctorId": "1",
+      "patientId": 1,
+      "patientName": "Laxman",
+      "doctorName": "Dr. Sravyanth",
+      "date": "2025-12-10",
+      "timeSlot": "10:00",
+      "reason": "rashes",
+      "status": "Cancelled"
+    },
+    {
+      "id": "bf46",
+      "doctorId": "1",
+      "patientId": 1,
+      "patientName": "Laxman",
+      "doctorName": "Dr. Sravyanth",
+      "date": "2025-12-10",
+      "timeSlot": "10:30",
+      "reason": "heart problem",
+      "status": "Completed"
+    },
+    {
+      "id": "fb3f",
+      "doctorId": "1",
+      "patientId": 1,
+         "patientName": "Laxman",
+      "doctorName": "Dr. Sravyanth",
+      "date": "2025-12-10",
+      "timeSlot": "13:30",
+      "reason": "viral",
+      "status": "Completed"
+    },
+    {
+      "id": "31d7",
+      "doctorId": "1",
+      "patientId": 1,
+      "patientName": "Laxman",
+      "doctorName": "Dr. Sravyanth",
+      "date": "2025-12-14",
+      "timeSlot": "15:00",
+      "reason": "fever",
+      "status": "Completed"
+    },
+    {
+      "id": "6635",
+      "doctorId": "1",
+      "patientId": 1,
+      "patientName": "Laxman",
+      "doctorName": "Dr. Sravyanth",
+      "date": "2025-12-16",
+      "timeSlot": "12:30",
+      "reason": "sdfahl",
+      "status": "Completed"
+    },
+    {
+      "id": "516a",
+      "doctorId": "1",
+      "patientId": 1,
+      "patientName": "Laxman",
+      "doctorName": "Dr. Sravyanth",
+      "date": "2025-12-16",
+      "timeSlot": "12:00",
+      "reason": "Fever",
+      "status": "Completed"
+    }
+  ],
+  "prescriptions": [
+    {
+      "id": "201",
+      "appointmentId": 101,
+      "patientId": 1,
+      "medicines": [
+        {
+          "name": "Aspirin",
+          "dosage": "100mg",
+          "frequency": "Once daily"
+        }
+      ],
+      "notes": "Take after food"
+    },
+    {
+      "id": "4e1a",
+      "appointmentId": null,
+      "patientId": 1,
+      "medicines": [
+        {
+          "name": "Dolo",
+          "dosage": "500mg",
+          "frequency": "3"
+        }
+      ],
+      "notes": "",
+      "date": "2025-12-08"
+    },
+    {
+      "id": "6c03",
+      "appointmentId": null,
+      "patientId": 1,
+      "medicines": [
+        {
+          "name": "dolo",
+          "dosage": "200mg",
+          "frequency": "3"
+        }
+      ],
+      "notes": "",
+      "date": "2025-12-08"
+    },
+    {
+      "id": "7fd4",
+      "appointmentId": 31,
+      "patientId": 1,
+      "medicines": [
+        {
+          "name": "dolo",
+          "dosage": "500mg",
+          "frequency": "3"
+        }
+      ],
+      "notes": "",
+      "date": "2025-12-14"
+    },
+    {
+      "id": "ec35",
+      "appointmentId": 6635,
+      "patientId": 1,
+      "medicines": [
+        {
+          "name": "Dolo",
+          "dosage": "500mg",
+          "frequency": "3"
+        }
+      ],
+      "notes": "fjsalkjf",
+      "date": "2025-12-16"
+    },
+    {
+      "id": "1ad6",
+      "appointmentId": 516,
+      "patientId": 1,
+      "medicines": [
+        {
+          "name": "Dolo",
+          "dosage": "500",
+          "frequency": "3"
+        }
+      ],
+      "notes": "After food",
+      "date": "2025-12-16"
+    }
+  ],
+  "healthRecords": [
+    {
+      "id": "301",
+      "recordId": 301,
+      "patientId": 1,
+      "type": "Lab Report",
+      "date": "2023-10-20",
+      "bloodPressure": "120/80",
+      "height": "180",
+      "weight": "75",
+      "symptoms": "None",
+      "description": "Routine Checkup",
+      "notes": "All good",
+      "url": "/assets/reports/report1.pdf",
+      "summary": "Blood Test Normal"
+    }
+  ],
+  "doctorAvailability": [
+    
+  ],
+  "notifications": [
+    {
+      "id": "1",
+      "userId": 1,
+      "message": "New appointment request from John Doe",
+      "read": false,
+      "createdAt": "2025-12-07T10:00:00Z"
+    }
+  ]
+}

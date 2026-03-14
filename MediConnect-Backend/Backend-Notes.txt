@@ -1,0 +1,5 @@
+In your application.properties, you likely have this setting: spring.jpa.hibernate.ddl-auto=update
+
+This setting ensures that whenever you change your Java code (add a field, rename a class) and restart the application, Spring Boot will automatically update your database tables to match your code without deleting your data.
+
+When you use spring.jpa.hibernate.ddl-auto=update, Hibernate follows a strict rule: "I will add what is missing, but I will never delete what exists."

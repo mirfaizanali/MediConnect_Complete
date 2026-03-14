@@ -1,0 +1,169 @@
+<div class="doctor-availability-container">
+  <div class="availability-header">
+    <div class="header-main">
+      <h2 class="availability-title">
+        <i class="fas fa-calendar-alt"></i> My Availability
+      </h2>
+      <button class="refresh-btn" (click)="fetchAllAvailability()" title="Refresh Availability">
+        <i class="fas fa-sync-alt"></i>
+      </button>
+    </div>
+
+    <div class="view-controls">
+      <div class="view-toggle">
+        <button class="toggle-btn" [class.active]="viewMode === 'date'" (click)="setViewMode('date')">
+          Daily
+        </button>
+        <button class="toggle-btn" [class.active]="viewMode === 'all'" (click)="setViewMode('all')">
+          All
+        </button>
+      </div>
+
+      <div class="slot-view-toggle" *ngIf="viewMode === 'date'">
+        <button class="view-mode-btn" [class.active]="slotViewMode === 'compact'" (click)="setSlotViewMode('compact')"
+          title="Compact View">
+          <i class="fas fa-th"></i>
+        </button>
+        <button class="view-mode-btn" [class.active]="slotViewMode === 'grid'" (click)="setSlotViewMode('grid')"
+          title="Grid View">
+          <i class="fas fa-list"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <ng-container *ngIf="viewMode === 'date'">
+    <div class="availability-controls">
+      <div class="control-group">
+        <label class="control-label">Date</label>
+        <input type="date" [ngModel]="selectedDate" (ngModelChange)="onDateChange($event)" class="control-input"
+          [min]="minDate" />
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">Schedule</label>
+        <div class="time-controls">
+          <input type="time" [(ngModel)]="startTime" class="time-control" />
+          <span class="time-separator">to</span>
+          <input type="time" [(ngModel)]="endTime" class="time-control" />
+        </div>
+        <button (click)="handleGenerateSchedule()" class="generate-btn" [disabled]="!startTime || !endTime">
+          Generate
+        </button>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">Break</label>
+        <div class="time-controls">
+          <input type="time" [(ngModel)]="breakStartTime" class="time-control" />
+          <span class="time-separator">to</span>
+          <input type="time" [(ngModel)]="breakEndTime" class="time-control" />
+
+        </div>
+                  <button (click)="handleMarkBreak()" class="break-btn" [disabled]="!breakStartTime || !breakEndTime">
+            Set Break
+          </button>
+      </div>
+    </div>
+
+    <div class="availability-content">
+      <div class="day-header">
+        <h3 class="day-date">{{ selectedDate | date:'fullDate' }}</h3>
+        <button *ngIf="availability.length > 0" (click)="handleClearDaySchedule()" class="clear-day-btn"
+          title="Clear all slots for this day">
+          <i class="fas fa-trash-alt"></i> Clear
+        </button>
+      </div>
+
+      <div class="slots-container">
+        <div *ngIf="loading" class="loading-state">Loading slots...</div>
+
+        <ng-container *ngIf="!loading && availability.length > 0">
+          <div *ngIf="slotViewMode === 'compact'" class="compact-slots">
+            <div *ngFor="let period of objectKeys(dailyPeriods)" class="time-period">
+              <ng-container *ngIf="dailyPeriods[period].length > 0">
+                <h4 class="period-title">
+                  {{ period | titlecase }}
+                  <span class="slot-count">({{ dailyPeriods[period].length }})</span>
+                </h4>
+                <div class="period-slots">
+                  <div *ngFor="let slot of dailyPeriods[period]" class="compact-slot"
+                    [class]="'status-' + slot.status.toLowerCase()" [title]="slot.timeSlot + ' - ' + slot.status">
+                    <span class="slot-time">{{ slot.timeSlot }}</span>
+                    @if (canToggleSlot(slot)) {
+                    <button (click)="handleToggleSlotStatus(slot)" class="slot-toggle">
+
+                      @if (slot.status === 'AVAILABLE') {
+                      <i class="fas fa-toggle-on" style="color: var(--hc-green)"></i>
+                      } @else {
+                      <i class="fas fa-toggle-off" style="color: var(--hc-gray)"></i>
+                      }
+
+                    </button>
+                    }
+
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+
+          <div *ngIf="slotViewMode === 'grid'" class="grid-slots">
+            <div *ngFor="let slot of availability" class="grid-slot" [class]="'status-' + slot.status.toLowerCase()">
+              <i class="fas fa-clock"></i>
+              <span class="slot-time">{{ slot.timeSlot }}</span>
+              <span class="status-indicator" [style.background-color]="getStatusColor(slot.status)"></span>
+              <button *ngIf="canToggleSlot(slot)" (click)="handleToggleSlotStatus(slot)" class="slot-toggle"
+                [title]="slot.status === 'AVAILABLE' ? 'Mark as Unavailable' : 'Mark as Available'">
+                <i *ngIf="slot.status === 'AVAILABLE'" class="fas fa-toggle-on" style="color: var(--hc-green)"></i>
+                <i *ngIf="slot.status !== 'AVAILABLE'" class="fas fa-toggle-off" style="color: var(--hc-gray)"></i>
+              </button>
+            </div>
+          </div>
+        </ng-container>
+
+        <div *ngIf="!loading && availability.length === 0" class="empty-state">
+          <i class="fas fa-clock"></i>
+          <p>No time slots scheduled</p>
+          <span>Generate a schedule to get started</span>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <div *ngIf="viewMode === 'all'" class="all-availability-view">
+    <h3 class="section-title">All Scheduled Availability</h3>
+
+    <div *ngIf="loading" class="loading-state">Loading all availability...</div>
+
+    <div *ngIf="!loading && objectKeys(groupedAvailability).length > 0" class="availability-list">
+      <div *ngFor="let date of sortedDates" class="availability-day-card">
+        <div class="day-header-compact" (click)="toggleDateExpansion(date)">
+          <div class="day-info">
+            <h4 class="day-date-compact">{{ date | date:'mediumDate' }}</h4>
+            <span class="total-slots">{{ groupedAvailability[date].length }} slots</span>
+          </div>
+          <button class="expand-btn">
+            <i [class]="expandedDates.has(date) ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"></i>
+          </button>
+        </div>
+
+        <div *ngIf="expandedDates.has(date)" class="day-slots-compact">
+          <div *ngFor="let slot of groupedAvailability[date]" class="compact-slot"
+            [class]="'status-' + slot.status.toLowerCase()" [title]="slot.timeSlot + ' - ' + slot.status">
+            <span class="slot-time">{{ slot.timeSlot }}</span>
+            <button *ngIf="canToggleSlot(slot)" (click)="handleToggleSlotStatus(slot)" class="slot-toggle">
+              <i *ngIf="slot.status === 'AVAILABLE'" class="fas fa-toggle-on" style="color: var(--hc-green)"></i>
+              <i *ngIf="slot.status !== 'AVAILABLE'" class="fas fa-toggle-off" style="color: var(--hc-gray)"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!loading && objectKeys(groupedAvailability).length === 0" class="empty-state">
+      <i class="fas fa-calendar-alt"></i>
+      <p>No availability scheduled yet</p>
+    </div>
+  </div>
+</div>

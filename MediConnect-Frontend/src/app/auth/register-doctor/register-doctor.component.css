@@ -1,0 +1,282 @@
+.doctor-reg-container {
+  width: 100%;
+  height: 100vh;
+  max-width: 100vw;
+  position: relative;
+  font-family: 'Inter', sans-serif;
+  overflow: hidden;
+  display: flex;
+}
+
+.doctor-reg-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.1;
+  z-index: -1;
+}
+
+.doctor-reg-left {
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(15, 118, 110, 0.95), rgba(13, 148, 136, 0.9));
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 3rem;
+  position: relative;
+  flex: 0 0 40%;
+  box-sizing: border-box;
+}
+
+.doctor-reg-back-button {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  z-index: 10;
+  color: var(--hc-primary);
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 2rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.doctor-reg-back-button:hover {
+  transform: translateX(-5px);
+  background: var(--hc-primary);
+  color: white;
+}
+
+.doctor-reg-illustration {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.doctor-reg-illustration-content h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.doctor-reg-illustration-content p {
+  font-size: 1.1rem;
+}
+
+.doctor-reg-links {
+  text-align: center;
+}
+
+.doctor-reg-login-link {
+  display: inline-block;
+  margin-top: 0.5rem;
+  color: white;
+  font-weight: 600;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+.doctor-reg-link {
+  color: white;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+.doctor-reg-right {
+  width: 60%;
+  height: 100%; 
+  padding: 2rem 4rem; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; 
+  background: #fff;
+  flex: 0 0 60%;
+  overflow-y: auto; 
+  box-sizing: border-box;
+}
+
+.doctor-reg-form-container {
+  width: 100%;
+  max-width: 700px;
+  margin: auto 0;
+}
+
+.doctor-reg-title {
+  font-size: 2.2rem; 
+  font-family: var(--font-heading);
+  color: var(--hc-black);
+  margin-bottom: 0.25rem;
+}
+
+.doctor-reg-subtitle {
+  color: var(--hc-gray);
+  margin-bottom: 2rem;
+  font-size: 1rem;
+}
+
+.doctor-reg-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem; 
+}
+
+.doctor-reg-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.doctor-reg-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--hc-dark-gray);
+}
+
+.doctor-reg-input,
+.doctor-reg-select {
+  padding: 0.7rem 1rem; 
+  border: 1px solid var(--hc-light-gray);
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  font-family: var(--font-primary);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.doctor-reg-input:focus,
+.doctor-reg-select:focus {
+  outline: none;
+  border-color: var(--hc-primary);
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
+  background: #fff;
+}
+
+.doctor-reg-input.input-error,
+.doctor-reg-select.input-error {
+  border-color: var(--hc-alert);
+}
+
+.doctor-reg-input.input-error:focus,
+.doctor-reg-select.input-error:focus {
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+}
+
+.validation-error {
+  color: var(--hc-alert);
+  font-size: 0.8rem;
+  margin-top: 0.15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.doctor-reg-inline-fields {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.doctor-reg-input-group--third,
+.doctor-reg-input-group--half {
+  flex: 1;
+}
+
+.doctor-reg-checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.doctor-reg-checkbox-input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--hc-primary);
+}
+
+.doctor-reg-checkbox-label {
+  font-size: 0.9rem;
+  color: var(--hc-gray);
+}
+
+.doctor-reg-submit-btn {
+  background: var(--hc-primary);
+  color: #fff;
+  padding: 0.9rem;
+  border: none;
+  border-radius: 0.75rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.doctor-reg-submit-btn:hover {
+  background: var(--hc-primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px -5px rgba(13, 110, 253, 0.2);
+}
+
+.doctor-reg-submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+@media (max-width: 1024px) {
+  .doctor-reg-container {
+    flex-direction: column;
+    overflow-y: auto; 
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .doctor-reg-left {
+    width: 100%;
+    flex: none;
+    padding: 2rem;
+  }
+
+  .doctor-reg-right {
+    width: 100%;
+    flex: none;
+    padding: 2rem;
+    overflow-y: visible; 
+  }
+
+  .doctor-reg-inline-fields {
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .doctor-reg-left,
+  .doctor-reg-right {
+    padding: 1.5rem;
+  }
+
+  .doctor-reg-title {
+    font-size: 1.8rem;
+  }
+}

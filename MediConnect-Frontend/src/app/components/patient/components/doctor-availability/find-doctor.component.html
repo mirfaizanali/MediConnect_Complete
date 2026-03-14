@@ -1,0 +1,173 @@
+<div class="doctor-availability-container">
+  <div class="table-header">
+    <h2><i class="fas fa-calendar-alt"></i> Find a Doctor & Book Appointment</h2>
+    <div class="table-controls">
+      <div class="search-box">
+        <i class="fas fa-search search-icon"></i>
+        <input
+          type="text"
+          placeholder="Search by name, specialization..."
+          [(ngModel)]="searchQuery"
+          (ngModelChange)="onSearch()"
+        />
+      </div>
+      <div class="filter-dropdown">
+        <span>Sort by: </span>
+        <select 
+          [ngModel]="sortBy + '-' + sortOrder" 
+          (ngModelChange)="onSortChange($event)"
+        >
+          <option value="exp-desc">Experience (High to Low)</option>
+          <option value="exp-asc">Experience (Low to High)</option>
+          <option value="name-asc">Name (A-Z)</option>
+          <option value="name-desc">Name (Z-A)</option>
+        </select>
+      </div>
+      <button class="refresh-icon" (click)="fetchDoctors()">
+        <i class="fas fa-sync-alt"></i>
+      </button>
+    </div>
+  </div>
+  
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Doctor</th>
+          <th>Specialization</th>
+          <th (click)="toggleSort('exp')" class="sortable-header">
+            Experience <i *ngIf="sortBy === 'exp'" [class]="sortOrder === 'asc' ? 'fas fa-arrow-up' : 'fas fa-arrow-down'"></i>
+          </th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="filteredDoctors.length === 0">
+          <td colspan="4" style="text-align: center; padding: 2rem; color: var(--hc-gray);">
+            No doctors found.
+          </td>
+        </tr>
+        <tr *ngFor="let doctor of filteredDoctors">
+          <td class="doctor-cell">
+            <div class="doctor-avatar">
+                <i class="fas fa-user-md" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: #2563EB;"></i>
+            </div>
+            <div>
+              <div class="doctor-name">{{ doctor.name }}</div>
+              <div class="doctor-qualification">{{ doctor.qualification }}</div>
+            </div>
+          </td>
+          <td>{{ doctor.specialization }}</td>
+          <td>{{ doctor.exp }} years</td>
+          <td>
+            <button class="view-button" (click)="setSelectedDoctor(doctor)">
+              Book Appointment
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Booking Modal -->
+  <div *ngIf="selectedDoctor" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header-actions">
+        <button class="back-button" (click)="closeModal()" title="Back">
+          <i class="fas fa-arrow-left"></i> Back
+        </button>
+        <button class="close-modal" (click)="closeModal()" title="Close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="modal-header">
+        <div>
+          <h3>{{ selectedDoctor.name }}</h3>
+          <p class="specialization">{{ selectedDoctor.specialization }}</p>
+          <div class="doctor-meta">
+            <span>{{ selectedDoctor.exp }} years experience</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="availability-section">
+        <h4><i class="far fa-calendar"></i> Select an Available Date</h4>
+        <div class="date-options">
+          <div *ngIf="availableDates.length === 0" class="no-availability">
+             No available dates found.
+          </div>
+          <button 
+            *ngFor="let date of availableDates"
+            class="date-option"
+            [class.selected]="selectedDate === date"
+            (click)="selectDate(date)"
+          >
+            {{ date | date:'EEE, MMM d' }}
+          </button>
+        </div>
+
+        <ng-container *ngIf="selectedDate">
+          <h4><i class="far fa-clock"></i> Select a Time Slot</h4>
+          <div class="slot-options">
+            <button 
+              *ngFor="let slot of getAvailableSlotsForDate(selectedDate)"
+              class="slot-option"
+              [class.selected]="selectedSlot === slot.timeSlot"
+              (click)="selectSlot(slot)"
+            >
+              {{ slot.timeSlot }}
+            </button>
+          </div>
+        </ng-container>
+        
+        <ng-container *ngIf="selectedSlot">
+            <h4>Reason for Visit <span style="color: red">*</span></h4>
+            <textarea
+              [(ngModel)]="reason"
+              placeholder="Please describe the reason for your visit (minimum 5 characters)..."
+              class="reason-textarea"
+              rows="3"
+            ></textarea>
+            <div class="char-count">{{ reason.length }}/5 characters minimum</div>
+
+            <h4>Mode of Consultation <span style="color: red">*</span></h4>
+            <div class="consultation-mode-options">
+              <label class="mode-option">
+                <input
+                  type="radio"
+                  name="consultationMode"
+                  [(ngModel)]="consultationMode"
+                  value="in-person"
+                />
+                <span class="mode-label">
+                  <i class="fas fa-user-friends"></i>
+                  In-Person
+                </span>
+              </label>
+              <!-- <label class="mode-option">
+                <input
+                  type="radio"
+                  name="consultationMode"
+                  [(ngModel)]="consultationMode"
+                  value="virtual"
+                />
+                <span class="mode-label">
+                  <i class="fas fa-video"></i>
+                  Virtual
+                </span>
+              </label> -->
+            </div>
+
+            <button
+              class="book-button"
+              (click)="handleBookAppointment()"
+              [disabled]="isBooking || reason.trim().length < 5"
+            >
+              {{ isBooking ? "Requesting..." : "Request Appointment" }}
+            </button>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>

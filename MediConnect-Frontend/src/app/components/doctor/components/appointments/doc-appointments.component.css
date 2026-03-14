@@ -1,0 +1,633 @@
+.appointment-container {
+    background-color: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+    height: 100%;
+}
+
+.appointment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.appointment-header__left {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    flex: 1;
+}
+
+.appointment-title {
+    font-size: 1.5rem;
+    color: var(--hc-dark-gray);
+    margin: 0;
+    font-family: var(--font-heading);
+}
+
+.appointment-controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.search-container {
+    position: relative;
+    width: 300px;
+}
+
+.search-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--hc-gray);
+    pointer-events: none;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.6rem 1rem 0.6rem 2.5rem;
+    border: 1px solid var(--hc-light-gray);
+    border-radius: 0.5rem;
+    font-family: var(--font-primary);
+    font-size: 0.95rem;
+    transition: all 0.2s;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--hc-primary);
+    box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+}
+
+.status-select {
+    padding: 0.6rem 2rem 0.6rem 1rem;
+    border: 1px solid var(--hc-light-gray);
+    border-radius: 0.5rem;
+    background-color: white;
+    font-family: var(--font-primary);
+    cursor: pointer;
+    outline: none;
+}
+
+.appointment-header__right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.badge {
+    background-color: var(--hc-secondary);
+    color: var(--hc-primary);
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.refresh-icon {
+    background: none;
+    border: none;
+    color: var(--hc-gray);
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+
+.refresh-icon:hover {
+    background-color: var(--hc-secondary);
+    color: var(--hc-primary);
+}
+
+/* Table */
+.table-wrapper {
+    overflow-x: auto;
+    border: 1px solid var(--hc-light-gray);
+    border-radius: 0.5rem;
+}
+
+.appointments-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.table-header {
+    background-color: #F8FAFC;
+    padding: 1rem;
+    font-weight: 600;
+    color: var(--hc-gray);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--hc-light-gray);
+}
+
+.table-row {
+    border-bottom: 1px solid var(--hc-light-gray);
+    transition: background-color 0.2s;
+}
+
+.table-row:last-child {
+    border-bottom: none;
+}
+
+.table-row:hover {
+    background-color: #F8FAFC;
+}
+
+.table-cell {
+    padding: 1rem;
+    font-size: 0.95rem;
+    color: var(--hc-dark-gray);
+    vertical-align: middle;
+}
+
+.cell-content {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.cell-content i {
+    color: var(--hc-gray);
+    font-size: 0.9rem;
+}
+
+.reason-cell {
+    max-width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--hc-gray);
+}
+
+/* Status Badges */
+.status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-waiting {
+    background-color: #FEF3C7;
+    color: #D97706;
+}
+
+.status-booked {
+    background-color: #DBEAFE;
+    color: #2563EB;
+}
+
+.status-completed {
+    background-color: #D1FAE5;
+    color: #059669;
+}
+
+.status-cancelled {
+    background-color: #FEE2E2;
+    color: #DC2626;
+}
+
+/* Actions */
+.actions-container {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.action-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-accept {
+    background-color: #D1FAE5;
+    color: #059669;
+}
+
+.btn-accept:hover {
+    background-color: #059669;
+    color: white;
+}
+
+.btn-decline {
+    background-color: #FEE2E2;
+    color: #DC2626;
+}
+
+.btn-decline:hover {
+    background-color: #DC2626;
+    color: white;
+}
+
+.btn-complete {
+    padding: 0.4rem 0.8rem;
+    background-color: var(--hc-primary);
+    color: white;
+    border: none;
+    border-radius: 0.3rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+    height: auto;
+    width: auto;
+}
+
+.btn-complete:hover {
+    background-color: var(--hc-primary-dark);
+}
+
+.btn-consult {
+    padding: 0.4rem 0.8rem;
+    background-color: var(--hc-accent);
+    color: white;
+    border: none;
+    border-radius: 0.3rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+    height: auto;
+    width: auto;
+}
+
+.btn-consult:hover {
+    background-color: #EA580C;
+    /* Darker orange */
+}
+
+.status-final {
+    font-size: 0.85rem;
+    color: var(--hc-gray);
+    font-style: italic;
+}
+
+.no-appointments {
+    text-align: center;
+    padding: 3rem;
+    color: var(--hc-gray);
+    font-style: italic;
+}
+
+.appointment-loading {
+    text-align: center;
+    padding: 2rem;
+    color: var(--hc-gray);
+}
+
+/* Pagination */
+.pagination-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--hc-light-gray);
+}
+
+.pagination-info {
+    font-size: 0.9rem;
+    color: var(--hc-gray);
+}
+
+.pagination-controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.pagination-btn,
+.pagination-number {
+    min-width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--hc-light-gray);
+    border-radius: 0.25rem;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+    color: var(--hc-dark-gray);
+}
+
+.pagination-btn:hover:not(:disabled),
+.pagination-number:hover {
+    border-color: var(--hc-primary);
+    color: var(--hc-primary);
+}
+
+.pagination-number.active {
+    background-color: var(--hc-primary);
+    color: white;
+    border-color: var(--hc-primary);
+}
+
+.pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Prescription Modal */
+.prescription-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.prescription-modal-content {
+    background: white;
+    border-radius: 0.75rem;
+    width: 90%;
+    max-width: 700px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+.prescription-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--hc-light-gray);
+}
+
+.prescription-modal-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: var(--hc-dark-gray);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.prescription-modal-header .close-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--hc-gray);
+    font-size: 1.2rem;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+
+.prescription-modal-header .close-button:hover {
+    background-color: var(--hc-secondary);
+    color: var(--hc-primary);
+}
+
+.prescription-modal-body {
+    padding: 1.5rem;
+    flex: 1;
+}
+
+.appointment-info {
+    background-color: #F8FAFC;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.appointment-info p {
+    margin: 0;
+    color: var(--hc-dark-gray);
+    line-height: 1.8;
+}
+
+.medicines-section {
+    margin-bottom: 1.5rem;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.section-header h4 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--hc-dark-gray);
+}
+
+.add-medicine-btn {
+    padding: 0.5rem 1rem;
+    background-color: var(--hc-primary);
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+}
+
+.add-medicine-btn:hover {
+    background-color: var(--hc-primary-dark);
+}
+
+.medicines-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.medicine-row {
+    border: 1px solid var(--hc-light-gray);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    background-color: #FAFAFA;
+}
+
+.medicine-input-group {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1.5fr auto;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.medicine-input {
+    padding: 0.6rem;
+    border: 1px solid var(--hc-light-gray);
+    border-radius: 0.375rem;
+    font-family: var(--font-primary);
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.medicine-input:focus {
+    outline: none;
+    border-color: var(--hc-primary);
+    box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+}
+
+.remove-medicine-btn {
+    padding: 0.6rem;
+    background-color: #FEE2E2;
+    color: #DC2626;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.remove-medicine-btn:hover:not(:disabled) {
+    background-color: #DC2626;
+    color: white;
+}
+
+.remove-medicine-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.notes-section {
+    margin-top: 1.5rem;
+}
+
+.notes-section label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--hc-dark-gray);
+}
+
+.prescription-notes-textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--hc-light-gray);
+    border-radius: 0.5rem;
+    font-family: var(--font-primary);
+    font-size: 0.9rem;
+    resize: vertical;
+    transition: all 0.2s;
+}
+
+.prescription-notes-textarea:focus {
+    outline: none;
+    border-color: var(--hc-primary);
+    box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+}
+
+.prescription-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding: 1.5rem;
+    border-top: 1px solid var(--hc-light-gray);
+}
+
+.modal-button {
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.modal-button.secondary {
+    background-color: white;
+    color: var(--hc-gray);
+    border: 1px solid var(--hc-light-gray);
+}
+
+.modal-button.secondary:hover:not(:disabled) {
+    background-color: var(--hc-secondary);
+    color: var(--hc-primary);
+}
+
+.modal-button.primary {
+    background-color: var(--hc-primary);
+    color: white;
+}
+
+.modal-button.primary:hover:not(:disabled) {
+    background-color: var(--hc-primary-dark);
+}
+
+.modal-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .appointment-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-container {
+        width: 100%;
+    }
+
+    .status-select {
+        width: 100%;
+    }
+
+    .pagination-container {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    .prescription-modal-content {
+        width: 95%;
+        max-height: 95vh;
+    }
+
+    .medicine-input-group {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+
+    .remove-medicine-btn {
+        width: 100%;
+    }
+
+    .prescription-modal-actions {
+        flex-direction: column-reverse;
+    }
+
+    .modal-button {
+        width: 100%;
+        justify-content: center;
+    }
+}

@@ -1,0 +1,182 @@
+<div class="doctor-reg-container">
+  <div class="doctor-reg-left">
+    <div class="doctor-reg-back-button" (click)="navigate('/')">
+      <i class="fas fa-arrow-left"></i>
+      <span>Login</span>
+    </div>
+    
+    <div class="doctor-reg-illustration">
+      <div class="doctor-reg-illustration-content">
+        <h2>Join Our Medical Network</h2>
+        <p>Connect with patients and grow your practice with our platform</p>
+      </div>
+    </div>
+
+    <div class="doctor-reg-links">
+      <p>Already have an account?       <a routerLink="/login" class="doctor-reg-login-link">
+        Sign In Now
+      </a></p>
+
+      <p class="doctor-reg-patient-link">
+        Are you a patient? <a routerLink="/register/patient" class="doctor-reg-link">Register as a Patient</a>
+      </p>
+    </div>
+  </div>
+
+  <div class="doctor-reg-right">
+    <div class="doctor-reg-form-container">
+      <h1 class="doctor-reg-title">Doctor Registration</h1>
+      <p class="doctor-reg-subtitle">Join our network of healthcare professionals</p>
+      
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="doctor-reg-form">
+        
+        <div class="doctor-reg-input-group">
+          <label for="name" class="doctor-reg-label">
+            <i class="fas fa-signature"></i>
+            Full Name
+          </label>
+          <input 
+            id="name" 
+            type="text" 
+            class="doctor-reg-input" 
+            placeholder="Dr. Peter Parker" 
+            formControlName="name"
+            [class.input-error]="registerForm.get('name')?.invalid && registerForm.get('name')?.touched"
+          />
+          <div *ngIf="registerForm.get('name')?.invalid && registerForm.get('name')?.touched" class="validation-error">
+            <span *ngIf="registerForm.get('name')?.errors?.['required']">Full name is required</span>
+          </div>
+        </div>
+
+        <div class="doctor-reg-input-group">
+          <label for="email" class="doctor-reg-label">
+            <i class="fas fa-envelope"></i>
+            Email
+          </label>
+          <input 
+            id="email" 
+            type="email" 
+            class="doctor-reg-input" 
+            placeholder="peter@example.com" 
+            formControlName="email"
+            [class.input-error]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched"
+          />
+          <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="validation-error">
+            <span *ngIf="registerForm.get('email')?.errors?.['required']">Email is required</span>
+            <span *ngIf="registerForm.get('email')?.errors?.['email']">Please enter a valid email address</span>
+          </div>
+        </div>
+        
+        <div class="doctor-reg-inline-fields">
+          <div class="doctor-reg-input-group doctor-reg-input-group--third">
+            <label for="specialization" class="doctor-reg-label">
+              Specialization
+            </label>
+            <select 
+              id="specialization" 
+              class="doctor-reg-select" 
+              formControlName="specialization"
+            >
+              <option value="">Select</option>
+              <option *ngFor="let spec of specializations" [value]="spec">{{ spec }}</option>
+            </select>
+          </div>
+          
+          <div class="doctor-reg-input-group doctor-reg-input-group--third">
+            <label for="qualification" class="doctor-reg-label">
+              Qualification
+            </label>
+            <select 
+              id="qualification" 
+              class="doctor-reg-select" 
+              formControlName="qualification"
+            >
+              <option value="">Select</option>
+              <option *ngFor="let qual of qualifications" [value]="qual">{{ qual }}</option>
+            </select>
+          </div>
+
+          <div class="doctor-reg-input-group doctor-reg-input-group--third">
+            <label for="exp" class="doctor-reg-label">
+              Experience
+            </label>
+            <input 
+              id="exp" 
+              type="number" 
+              class="doctor-reg-input" 
+              placeholder="Years" 
+              formControlName="exp"
+              min="0"
+              max="50"
+            />
+          </div>
+        </div>
+        
+        <div class="doctor-reg-inline-fields">
+          <div class="doctor-reg-input-group doctor-reg-input-group--half">
+            <label for="password" class="doctor-reg-label">
+              <i class="fas fa-lock"></i>
+              Password
+            </label>
+            <input 
+              id="password" 
+              type="password" 
+              class="doctor-reg-input" 
+              placeholder="••••••••" 
+              formControlName="password"
+              [class.input-error]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
+            />
+            <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="validation-error">
+              <span *ngIf="registerForm.get('password')?.errors?.['required']">Password is required</span>
+              <span *ngIf="registerForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters</span>
+            </div>
+          </div>
+
+          <div class="doctor-reg-input-group doctor-reg-input-group--half">
+            <label for="confirmPassword" class="doctor-reg-label">
+              <i class="fas fa-lock"></i>
+              Confirm Password
+            </label>
+            <input 
+              id="confirmPassword" 
+              type="password" 
+              class="doctor-reg-input" 
+              placeholder="••••••••" 
+              formControlName="confirmPassword"
+              [class.input-error]="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched"
+            />
+            <div *ngIf="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched" class="validation-error">
+              <span *ngIf="registerForm.get('confirmPassword')?.errors?.['required']">Please confirm your password</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- <div class="doctor-reg-checkbox-group">
+          <input 
+            id="terms" 
+            type="checkbox" 
+            class="doctor-reg-checkbox-input" 
+            [checked]="termsAccepted"
+            (change)="toggleTerms($event)"
+          />
+          <label for="terms" class="doctor-reg-checkbox-label">
+            I accept the <a routerLink="/terms" class="doctor-reg-link">Terms and Conditions</a>
+          </label>
+        </div> -->
+
+          <div *ngIf="errorMessage" class="error-message" style="color: var(--hc-alert); text-align: center; margin-top: 1rem;">
+              {{ errorMessage }}
+          </div>
+          <div *ngIf="successMessage" class="success-message" style="color: var(--hc-primary); text-align: center; margin-top: 1rem;">
+              {{ successMessage }}
+          </div>
+
+        <button type="submit" class="doctor-reg-submit-btn" [disabled]="registerForm.invalid || isSubmitting">
+          <i class="fas fa-user-plus"></i>
+          <span *ngIf="!isSubmitting">Register Now</span>
+          <span *ngIf="isSubmitting">Registering...</span>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

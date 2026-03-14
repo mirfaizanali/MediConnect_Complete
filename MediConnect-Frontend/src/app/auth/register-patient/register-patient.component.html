@@ -1,0 +1,232 @@
+<div class="patient-reg-container">
+
+  <div class="patient-reg-background"></div>
+
+
+  <div class="patient-reg-back-button" (click)="navigate('/')">
+    <i class="fas fa-arrow-left"></i>
+    <span>Login</span>
+  </div>
+
+
+  <div class="patient-reg-main">
+
+    <div class="patient-reg-left">
+      <div class="patient-reg-left-content">
+        <div class="patient-reg-welcome">
+          <h1>Welcome to MediConnect</h1>
+          <p>Join thousands of patients managing their health with our platform. Get instant access to medical professionals and personalized care.</p>
+        </div>
+      </div>
+
+  
+      <div class="patient-reg-left-footer">
+        <p>Already have an account? <a routerLink="/login" class="patient-reg-login-link">Sign In</a></p>
+        <p class="patient-reg-doctor-redirect">
+          Are you a doctor? <a routerLink="/register/doctor" class="patient-reg-doctor-link">Register as a Doctor</a>
+        </p>
+      </div>
+    </div>
+
+
+    <div class="patient-reg-right">
+      <div class="patient-reg-form-container">
+        <div class="patient-reg-header">
+          <h2>Patient Registration</h2>
+          <p>Fill in your details to get started</p>
+        </div>
+
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="patient-reg-form">
+
+          <div class="patient-reg-input-group">
+            <label for="name" class="patient-reg-label">
+              <i class="fas fa-user"></i>
+              Full Name
+            </label>
+            <input 
+              id="name"
+              type="text" 
+              placeholder="Enter your full name" 
+              formControlName="name"
+              class="patient-reg-input"
+              [class.input-error]="registerForm.get('name')?.invalid && registerForm.get('name')?.touched"
+            />
+            <div *ngIf="registerForm.get('name')?.invalid && registerForm.get('name')?.touched" class="validation-error">
+              <span *ngIf="registerForm.get('name')?.errors?.['required']">Full name is required</span>
+            </div>
+          </div>
+
+          <div class="patient-reg-input-group">
+            <label for="email" class="patient-reg-label">
+              <i class="fas fa-envelope"></i>
+              Email Address
+            </label>
+            <input 
+              id="email"
+              type="email" 
+              placeholder="Enter your email" 
+              formControlName="email"
+              class="patient-reg-input"
+              [class.input-error]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched"
+            />
+            <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="validation-error">
+              <span *ngIf="registerForm.get('email')?.errors?.['required']">Email is required</span>
+              <span *ngIf="registerForm.get('email')?.errors?.['email']">Please enter a valid email address</span>
+            </div>
+          </div>
+
+          <div class="patient-reg-inline-fields">
+            <div class="patient-reg-input-group patient-reg-input-group--third">
+              <label for="age" class="patient-reg-label">Age</label>
+              <input 
+                id="age"
+                type="number" 
+                placeholder="Age" 
+                formControlName="age"
+                min="1"
+                max="120"
+                class="patient-reg-input"
+              />
+            </div>
+            
+            <div class="patient-reg-input-group patient-reg-input-group--third">
+              <label for="gender" class="patient-reg-label">Gender</label>
+              <select 
+                id="gender"
+                formControlName="gender"
+                class="patient-reg-select"
+              >
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div class="patient-reg-input-group patient-reg-input-group--third">
+              <label for="bloodGroup" class="patient-reg-label">
+                <i class="fas fa-tint" style="font-size: 0.8rem;"></i>
+                Blood Group
+              </label>
+              <select 
+                id="bloodGroup"
+                formControlName="bloodGroup"
+                class="patient-reg-select"
+              >
+                <option value="">Select</option>
+                <option *ngFor="let group of bloodGroups" [value]="group">{{ group }}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="patient-reg-inline-fields">
+            <div class="patient-reg-input-group patient-reg-input-group--half">
+              <label for="address" class="patient-reg-label">
+                <i class="fas fa-map-marker-alt"></i>
+                Address
+              </label>
+              <input 
+                id="address"
+                type="text" 
+                placeholder="Your address" 
+                formControlName="address"
+                class="patient-reg-input"
+              />
+            </div>
+
+            <div class="patient-reg-input-group patient-reg-input-group--half">
+              <label for="phoneNumber" class="patient-reg-label">
+                <i class="fas fa-phone"></i>
+                Phone Number
+              </label>
+              <input 
+                id="phoneNumber"
+                type="tel" 
+                placeholder="Phone number" 
+                formControlName="phoneNumber"
+                class="patient-reg-input"
+                [class.input-error]="registerForm.get('phoneNumber')?.invalid && registerForm.get('phoneNumber')?.touched"
+              />
+              <div *ngIf="registerForm.get('phoneNumber')?.invalid && registerForm.get('phoneNumber')?.touched" class="validation-error">
+                <span *ngIf="registerForm.get('phoneNumber')?.errors?.['required']">Phone number is required</span>
+                <span *ngIf="registerForm.get('phoneNumber')?.errors?.['pattern']">Please enter a valid 10-digit phone number</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="patient-reg-inline-fields">
+            <div class="patient-reg-input-group patient-reg-input-group--half">
+              <label for="password" class="patient-reg-label">
+                <i class="fas fa-lock"></i>
+                Password
+              </label>
+              <div class="patient-reg-password-container">
+                <input 
+                  [type]="showPassword ? 'text' : 'password'" 
+                  id="password"
+                  placeholder="Create password" 
+                  formControlName="password"
+                  class="patient-reg-input"
+                  [class.input-error]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
+                />
+                <button 
+                  type="button" 
+                  class="patient-reg-password-toggle"
+                  (click)="togglePasswordVisibility()"
+                >
+                  <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+                </button>
+              </div>
+              <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="validation-error">
+                <span *ngIf="registerForm.get('password')?.errors?.['required']">Password is required</span>
+                <span *ngIf="registerForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters</span>
+              </div>
+            </div>
+
+            <div class="patient-reg-input-group patient-reg-input-group--half">
+              <label for="confirmPassword" class="patient-reg-label">
+                Confirm Password
+              </label>
+              <div class="patient-reg-password-container">
+                <input 
+                  [type]="showConfirmPassword ? 'text' : 'password'" 
+                  id="confirmPassword"
+                  placeholder="Confirm password" 
+                  formControlName="confirmPassword"
+                  class="patient-reg-input"
+                  [class.input-error]="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched"
+                />
+                <button 
+                  type="button" 
+                  class="patient-reg-password-toggle"
+                  (click)="toggleConfirmPasswordVisibility()"
+                >
+                  <i [class]="showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+                </button>
+              </div>
+              <div *ngIf="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched" class="validation-error">
+                <span *ngIf="registerForm.get('confirmPassword')?.errors?.['required']">Please confirm your password</span>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="errorMessage" class="error-message" style="color: var(--hc-alert); text-align: center; font-size: 0.9rem;">
+            {{ errorMessage }}
+          </div>
+          <div *ngIf="successMessage" class="success-message" style="color: var(--hc-primary); text-align: center; font-size: 0.9rem;">
+            {{ successMessage }}
+          </div>
+
+          <button 
+            type="submit" 
+            class="patient-reg-submit-btn"
+            [disabled]="registerForm.invalid || isSubmitting"
+          >
+            <span *ngIf="isSubmitting" class="patient-reg-spinner"></span>
+            <span *ngIf="!isSubmitting">Create Account</span>
+            <span *ngIf="isSubmitting">Creating Account...</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

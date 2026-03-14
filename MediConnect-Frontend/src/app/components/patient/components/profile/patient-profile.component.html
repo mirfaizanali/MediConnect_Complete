@@ -1,0 +1,220 @@
+<div class="profile-card">
+  <div *ngIf="loading" class="profile-loading">
+    <div class="loading-spinner"></div>
+    <p>Loading Profile...</p>
+  </div>
+
+  <div *ngIf="error" class="profile-error">
+    <div class="error-icon"><i class="fas fa-exclamation-triangle"></i></div>
+    <p>{{ error }}</p>
+  </div>
+
+  <ng-container *ngIf="!loading && !error && patient">
+    
+    <div class="profile-header">
+      <div class="profile-avatar">
+        <div class="profile-image">
+           <i class="fas fa-user" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 3rem; color: #2563EB;"></i>
+        </div>
+        <button 
+          *ngIf="!editMode && !showChangePassword"
+          class="edit-profile-btn"
+          (click)="handleEditClick()"
+          title="Edit Profile"
+        >
+          <i class="fas fa-pen"></i>
+        </button>
+      </div>
+      
+      <div class="profile-info">
+        <ng-container *ngIf="editMode && formData; else viewHeader">
+          <input
+            name="name"
+            class="profile-name-input"
+            placeholder="Full Name"
+            [(ngModel)]="formData.name"
+          />
+          <div class="profile-meta-edit">
+            <input
+              name="age"
+              class="meta-input"
+              type="number"
+              placeholder="Age"
+              [(ngModel)]="formData.age"
+            />
+            <select
+              name="gender"
+              class="meta-input"
+              [(ngModel)]="formData.gender"
+            >
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+            <input
+              name="bloodGroup"
+              class="meta-input"
+              placeholder="Blood Group"
+              [(ngModel)]="formData.bloodGroup"
+            />
+          </div>
+        </ng-container>
+        <ng-template #viewHeader>
+          <ng-container *ngIf="showChangePassword; else normalHeader">
+            <h2 class="profile-title">Change Password</h2>
+            <p class="profile-subtitle">Update your account password</p>
+          </ng-container>
+          <ng-template #normalHeader>
+            <h2 class="profile-name">{{ patient.name }}</h2>
+            <div class="profile-meta">
+              <span class="meta-item">{{ patient.age }} years</span>
+              <span class="meta-divider">•</span>
+              <span class="meta-item">{{ patient.gender }}</span>
+              <span class="meta-divider">•</span>
+              <span class="meta-item">{{ patient.bloodGroup }}</span>
+            </div>
+          </ng-template>
+        </ng-template>
+      </div>
+    </div>
+
+ 
+    <div *ngIf="showChangePassword" class="password-section">
+      <div class="input-group">
+        <i class="fas fa-lock input-icon"></i>
+        <input
+          type="password"
+          name="oldPassword"
+          class="password-input"
+          placeholder="Current Password"
+          [(ngModel)]="passwordData.oldPassword"
+        />
+      </div>
+      <div class="input-group">
+        <i class="fas fa-lock input-icon"></i>
+        <input
+          type="password"
+          name="newPassword"
+          class="password-input"
+          placeholder="New Password"
+          [(ngModel)]="passwordData.newPassword"
+        />
+      </div>
+      <div class="input-group">
+        <i class="fas fa-lock input-icon"></i>
+        <input
+          type="password"
+          name="confirmPassword"
+          class="password-input"
+          placeholder="Confirm New Password"
+          [(ngModel)]="passwordData.confirmPassword"
+        />
+      </div>
+      
+      <div *ngIf="passwordError" class="error-message">
+        {{ passwordError }}
+      </div>
+      
+      <div *ngIf="passwordSuccess" class="success-message">
+        Password changed successfully!
+      </div>
+    </div>
+    
+    <div *ngIf="!showChangePassword" class="contact-section">
+      
+      <div class="contact-item">
+        <div class="contact-icon">
+          <i class="far fa-envelope"></i>
+        </div>
+        <div class="contact-content">
+          <span class="contact-label">Email</span>
+          <span class="contact-value email-value">{{ patient.email }}</span>
+        </div>
+      </div>
+
+      
+      <div class="contact-item">
+        <div class="contact-icon">
+          <i class="fas fa-phone"></i>
+        </div>
+        <div class="contact-content">
+          <span class="contact-label">Phone</span>
+          <input
+             *ngIf="editMode && formData"
+             name="phoneNumber"
+             class="contact-input"
+             type="tel"
+             pattern="[0-9]{10}"
+             placeholder="Enter 10-digit phone number"
+             [(ngModel)]="formData.phoneNumber"
+             required
+           />
+           <span *ngIf="!editMode" class="contact-value">{{ patient.phoneNumber }}</span>
+        </div>
+      </div>
+
+      
+      <div class="contact-item">
+        <div class="contact-icon">
+          <i class="fas fa-map-marker-alt"></i>
+        </div>
+        <div class="contact-content">
+          <span class="contact-label">Address</span>
+          <input
+             *ngIf="editMode && formData"
+             name="address"
+             class="contact-input"
+             placeholder="Enter your address"
+             [(ngModel)]="formData.address"
+           />
+           <span *ngIf="!editMode" class="contact-value address-value">{{ patient.address }}</span>
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="action-buttons">
+      <ng-container *ngIf="showChangePassword">
+        <button 
+          (click)="handlePasswordSubmit()" 
+          class="btn-primary"
+        >
+          Change Password
+        </button>
+        <button 
+          (click)="showChangePassword = false" 
+          class="btn-secondary"
+        >
+          Cancel
+        </button>
+      </ng-container>
+
+      <ng-container *ngIf="editMode">
+        <button 
+          (click)="handleUpdate()" 
+          class="btn-primary"
+          [disabled]="updateLoading"
+        >
+          <div *ngIf="updateLoading" class="button-spinner"></div>
+          <span *ngIf="!updateLoading"><i class="fas fa-save"></i> Save Changes</span>
+          <span *ngIf="updateLoading">Saving...</span>
+        </button>
+        <button 
+          (click)="setEditMode(false)" 
+          class="btn-secondary"
+        >
+          <i class="fas fa-times"></i> Cancel
+        </button>
+      </ng-container>
+
+      <ng-container *ngIf="!editMode && !showChangePassword">
+        <button (click)="handleEditClick()" class="btn-primary">
+          <i class="fas fa-pen"></i> Edit Profile
+        </button>
+        <!-- <button (click)="handleChangePasswordClick()" class="btn-outline">
+          <i class="fas fa-lock"></i> Change Password
+        </button> -->
+      </ng-container>
+    </div>
+  </ng-container>
+</div>

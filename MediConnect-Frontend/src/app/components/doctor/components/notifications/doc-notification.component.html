@@ -1,0 +1,47 @@
+<div class="notification-bell-container">
+  <button class="bell-icon-button" [class.active]="isOpen" (click)="toggleDropdown($event)">
+    <i class="fas fa-bell"></i>
+    <span *ngIf="notifications.length > 0" class="notification-badge">{{ notifications.length }}</span>
+  </button>
+
+  <div *ngIf="isOpen" class="notification-dropdown" (click)="$event.stopPropagation()">
+    <div class="notification-header">
+      <h3>Notifications</h3>
+      <button
+        class="mark-all-button"
+        (click)="handleMarkAllAsRead()"
+        [disabled]="notifications.length === 0"
+      >
+        Mark All as Read
+      </button>
+    </div>
+
+    <div class="notification-list">
+      <div *ngIf="isLoading" class="loading-state">Loading...</div>
+      
+      <div *ngIf="!isLoading && notifications.length === 0" class="empty-state">
+        <i class="fas fa-bell-slash"></i>
+        <p>You're all caught up!</p>
+      </div>
+
+      <div *ngFor="let notification of notifications" class="notification-item">
+        <div class="notification-icon">
+          <i class="fas fa-envelope"></i>
+        </div>
+        <div class="notification-content">
+          <p>{{ notification.message }}</p>
+          <span class="notification-time">{{ notification.createdAt | date:'short' }}</span>
+        </div>
+        <div class="notification-item-actions">
+          <button
+            class="action-button mark-read"
+            title="Mark as Read"
+            (click)="handleMarkAsRead(notification.id)"
+          >
+            <i class="fas fa-check"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

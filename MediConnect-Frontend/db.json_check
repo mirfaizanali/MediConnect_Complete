@@ -1,0 +1,23 @@
+[
+  {
+    "availabilityId": 1,
+    "doctorId": 1,
+    "date": "2025-12-08",
+    "timeSlot": "09:00",
+    "status": "AVAILABLE"
+  },
+  {
+    "availabilityId": 2,
+    "doctorId": 1,
+    "date": "2025-12-08",
+    "timeSlot": "10:00",
+    "status": "BOOKED"
+  },
+  {
+    "availabilityId": 3,
+    "doctorId": 1,
+    "date": "2025-12-08",
+    "timeSlot": "11:00",
+    "status": "UNAVAILABLE"
+  }
+]

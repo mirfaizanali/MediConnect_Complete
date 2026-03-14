@@ -1,0 +1,196 @@
+<div class="profile-card">
+  <div class="profile-card__content">
+    
+    <div *ngIf="loading" class="profile-card__loading">
+      Loading profile...
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="error" class="error-message">
+      {{ error }}
+      <button class="dismiss-btn" (click)="error = null">&times;</button>
+    </div>
+
+    <ng-container *ngIf="!loading && doc">
+      <!-- Edit Mode -->
+      <form *ngIf="editMode" (submit)="handleSubmit($event)" class="profile-card__form">
+        <h3 class="profile-card__form-title">Edit Profile</h3>
+        
+        <div class="profile-card__form-group">
+          <label class="profile-card__form-label">Name:</label>
+          <input
+            class="profile-card__form-input"
+            name="name"
+            [(ngModel)]="formData.name"
+            required
+          />
+        </div>
+        <div class="profile-card__form-group">
+          <label class="profile-card__form-label">Specialization:</label>
+          <input
+            class="profile-card__form-input"
+            name="specialization"
+            [(ngModel)]="formData.specialization"
+            required
+          />
+        </div>
+        <div class="profile-card__form-group">
+          <label class="profile-card__form-label">Qualification:</label>
+          <input
+            class="profile-card__form-input"
+            name="qualification"
+            [(ngModel)]="formData.qualification"
+            required
+          />
+        </div>
+        <div class="profile-card__form-group">
+          <label class="profile-card__form-label">Experience (years):</label>
+          <input
+            class="profile-card__form-input"
+            name="exp"
+            type="number"
+            min="0"
+            [(ngModel)]="formData.exp"
+            required
+          />
+        </div>
+
+        <div *ngIf="updateError" class="error-message">
+          {{ updateError }}
+          <button class="dismiss-btn" (click)="updateError = null">&times;</button>
+        </div>
+        
+        <div class="profile-card__form-actions">
+          <button
+            type="submit"
+            class="profile-card__update-button"
+            [disabled]="updateLoading"
+          >
+            {{ updateLoading ? 'Updating...' : 'Save Changes' }}
+          </button>
+          <button
+            type="button"
+            class="profile-card__cancel-button"
+            (click)="setEditMode(false)"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+
+      <!-- Change Password Mode -->
+      <form *ngIf="showChangePassword" (submit)="handlePasswordSubmit($event)" class="profile-card__form">
+        <h3 class="profile-card__form-title">Change Password</h3>
+        
+        <div class="profile-card__form-group">
+          <label class="profile-card__form-label">Current Password:</label>
+          <input
+            class="profile-card__form-input"
+            type="password"
+            name="currentPassword"
+            [(ngModel)]="passwordData.currentPassword"
+            required
+          />
+        </div>
+        <div class="profile-card__form-group">
+          <label class="profile-card__form-label">New Password:</label>
+          <input
+            class="profile-card__form-input"
+            type="password"
+            name="newPassword"
+            [(ngModel)]="passwordData.newPassword"
+            required
+            minlength="6"
+          />
+        </div>
+        <div class="profile-card__form-group">
+          <label class="profile-card__form-label">Confirm New Password:</label>
+          <input
+            class="profile-card__form-input"
+            type="password"
+            name="confirmPassword"
+            [(ngModel)]="passwordData.confirmPassword"
+            required
+            minlength="6"
+          />
+        </div>
+
+        <div *ngIf="passwordError" class="error-message">
+          {{ passwordError }}
+          <button class="dismiss-btn" (click)="passwordError = null">&times;</button>
+        </div>
+        
+        <div *ngIf="passwordSuccess" class="success-message">
+          Password changed successfully!
+          <button class="dismiss-btn" (click)="passwordSuccess = false">&times;</button>
+        </div>
+
+        <div class="profile-card__form-actions">
+          <button
+            type="submit"
+            class="profile-card__update-button"
+            [disabled]="updateLoading"
+          >
+             {{ updateLoading ? 'Updating...' : 'Change Password' }}
+          </button>
+          <button
+            type="button"
+            class="profile-card__cancel-button"
+            (click)="setShowChangePassword(false)"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+
+      <!-- View Mode -->
+      <ng-container *ngIf="!editMode && !showChangePassword">
+        <div class="profile-card__header">
+          <h2 class="profile-card__name">{{ doc.name }}</h2>
+          <p class="profile-card__email">{{ doc.email }}</p>
+        </div>
+        
+        <div class="profile-card__details">
+          <div class="profile-card__detail">
+            <span class="profile-card__detail-label">Specialization:</span>
+            <span class="profile-card__detail-value">{{ doc.specialization }}</span>
+          </div>
+          <div class="profile-card__detail">
+            <span class="profile-card__detail-label">Experience:</span>
+            <span class="profile-card__detail-value">{{ doc.exp }} years</span>
+          </div>
+          <div class="profile-card__detail">
+            <span class="profile-card__detail-label">Qualification:</span>
+            <span class="profile-card__detail-value">{{ doc.qualification }}</span>
+          </div>
+          <!-- <div class="profile-card__detail">
+            <span class="profile-card__detail-label">Rating:</span>
+            <span class="profile-card__detail-value profile-card__rating">
+              {{ doc.rating }} ★
+            </span>
+          </div> -->
+        </div>
+        
+        <div class="profile-card__actions">
+          <button
+            (click)="handleEditClick()"
+            class="profile-card__update-button"
+          >
+            Update Profile
+          </button>
+          <button
+            (click)="handleChangePasswordClick()"
+            class="profile-card__password-button"
+          >
+            Change Password
+          </button>
+        </div>
+
+        <div *ngIf="updateSuccess" class="success-message" style="justify-content: center;">
+          Profile updated successfully!
+        </div>
+      </ng-container>
+
+    </ng-container>
+  </div>
+</div>

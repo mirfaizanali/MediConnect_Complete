@@ -1,0 +1,22 @@
+<div class="consultations-container" style="padding: 2rem; max-width: 1200px; margin: 0 auto;">
+    <div *ngIf="loading" class="loading-state">
+        <i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 1rem; color: var(--hc-primary);"></i>
+        <p>Loading your medical history...</p>
+    </div>
+<ng-container *ngIf="!loading">
+  <app-patient-history 
+    *ngIf="patientId; else noProfile" 
+    [patientId]="patientId"
+    [showBackButton]="false"
+    mode="patient">
+  </app-patient-history>
+
+  <ng-template #noProfile>
+    <div class="empty-state">
+      <i class="fas fa-exclamation-circle"></i>
+      <h3>Profile Not Found</h3>
+      <p>Unable to load patient profile. Please try logging in again.</p>
+    </div>
+  </ng-template>
+</ng-container>
+</div>
