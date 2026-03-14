@@ -30,29 +30,28 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http.cors(cors -> cors.configurationSource(request -> {
-            CorsConfiguration config = new CorsConfiguration();
-            config.setAllowedOrigins(List.of("http://localhost:4200"));
-            config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE","PATCH"));
-            config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-            return config;
-        })).csrf(csrf -> csrf.disable()).authorizeHttpRequests(auth -> auth
+                    CorsConfiguration config = new CorsConfiguration();
+                    config.setAllowedOrigins(List.of("http://localhost:4200", "https://medi-connect-complete.vercel.app"));
+                    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+                    config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+                    config.setAllowCredentials(true);
+                    return config;
+                })).csrf(csrf -> csrf.disable()).authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/api/auth/**",
                                 "/api/auth/refresh",
                                 "/api/doctors/top-rated",
                                 "/api/doctors/all"
                         ).permitAll()
-
                         .requestMatchers(
-                                "/api/patients/me/**",   // Patient can manage their own profile
-                                "/api/appointments/book",   // Patient can book an appointment
+                                "/api/patients/me/**",
+                                "/api/appointments/book",
                                 "/api/patient-appointments/**",
                                 "/api/patient-consultations/**"
-                                ).hasRole("PATIENT")
-                        // In your SecurityConfig.java
+                        ).hasRole("PATIENT")
                         .requestMatchers(
                                 "/v3/api-docs",
-                                "/v3/api-docs/**",     // This is the critical one for config
+                                "/v3/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/webjars/**"
@@ -62,8 +61,8 @@ public class SecurityConfig {
                                 "/api/doctors/**",
                                 "/api/doctors/user/change-password",
                                 "/api/doctors/availability/**",
-                                "/api/appointments/doctor",    // Doctor can get their list of appointments
-                                "/api/appointments/{appointmentId}/status", // Doctor can update a specific appointment
+                                "/api/appointments/doctor",
+                                "/api/appointments/{appointmentId}/status",
                                 "/api/consultations/**",
                                 "/api/patient-consultations/**",
                                 "/api/doctor-panel/**"
@@ -72,7 +71,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/notifications").authenticated()
                         .requestMatchers("/api/notifications/**").authenticated()
                         .requestMatchers("/api/notifications/unread-count").authenticated()
-                        .anyRequest().authenticated()).sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                        .anyRequest().authenticated())
+                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
@@ -81,7 +81,6 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception{
         return config.getAuthenticationManager();
     }
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {
